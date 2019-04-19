@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=NordManager
+Comment=Simple Switch for NordVPN
+Keywords=vpn VPN nordvpn nord
+Exec=nordmanager.sh
+Icon=/usr/share/pixmaps/icon_nordvpn.png
+Terminal=false
+Type=Application
+Categories=Utility;Network;
