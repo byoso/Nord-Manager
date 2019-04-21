@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=NordManager
+Name=Nord Manager
 Comment=Simple Switch for NordVPN
 Keywords=vpn VPN nordvpn nord
 Exec=nordmanager.sh
