@@ -20,9 +20,9 @@ sudo mkdir -p /opt/NordManager/
 sudo cp app/nordmanager.py /opt/NordManager/
 
 
-# =============== settings files
+# =============== settings file
 sudo mkdir -p ~/.local/share/NordManager/
-sudo cp app/vpn_command.txt ~/.local/share/NordManager/
+sudo cp app/data.json ~/.local/share/NordManager/
 
 
 # =============== RIGHTS
