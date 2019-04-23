@@ -29,6 +29,7 @@ def load_data():
         data = json.load(file)
     return data
 
+
 data = load_data()
 
 # ================= Classes used ==================
@@ -36,8 +37,9 @@ data = load_data()
 
 class Indicator():
     def __init__(self):
-        timing = 4
-        info_conn = "truc"
+        self.timing = data["timing"]
+        print("timing:" + str(self.timing))  # debug
+        # info_conn = "truc"
         self.do_run = True
         self.ex_status = False
         # local_rep = os.path.expanduser("~/.local/share/NordManager/")
@@ -56,40 +58,54 @@ class Indicator():
         menu = Gtk.Menu()
 
         # menu items
-        self.item_1 = Gtk.MenuItem("-- "+data["custom_name"]+" --")
-        item_settings = gtk.MenuItem('Settings')
-        item_us = gtk.MenuItem('USA')
-        item_jp = gtk.MenuItem('Japan')
-        item_ireland = gtk.MenuItem('Ireland')
-        item_fr = gtk.MenuItem('France')
-        item_iceland = gtk.MenuItem('Iceland')
+        self.item_1 = Gtk.MenuItem(data["it1n"])
+        self.item_2 = Gtk.MenuItem(data["it2n"])
+        self.item_3 = Gtk.MenuItem(data["it3n"])
+        self.item_4 = Gtk.MenuItem(data["it4n"])
+        self.item_5 = Gtk.MenuItem(data["it5n"])
+        self.item_6 = Gtk.MenuItem(data["it6n"])
+        # item_us = gtk.MenuItem('USA')
+        # item_jp = gtk.MenuItem('Japan')
+        # item_ireland = gtk.MenuItem('Ireland')
+        # item_fr = gtk.MenuItem('France')
+        # item_iceland = gtk.MenuItem('Iceland')
         # Stop VPN
         item_stop = Gtk.MenuItem('** Close VPN connection **')
+        # settings
+        item_settings = gtk.MenuItem('Settings')
         # Quit
         item_quit = Gtk.MenuItem('Quit')
 
         # connect to callbacks
-        self.item_1.connect('activate', self.connect_custom)
+        self.item_1.connect('activate', self.connect_item1)
+        self.item_2.connect('activate', self.connect_item2)
+        self.item_3.connect('activate', self.connect_item3)
+        self.item_4.connect('activate', self.connect_item4)
+        self.item_5.connect('activate', self.connect_item5)
+        self.item_6.connect('activate', self.connect_item6)
 
-        item_settings.connect('activate', self.settings)
-
-        item_us.connect('activate', self.connect_us)
-        item_jp.connect('activate', self.connect_jp)
-        item_ireland.connect('activate', self.connect_ireland)
-        item_fr.connect('activate', self.connect_fr)
-        item_iceland.connect('activate', self.connect_iceland)
+        # item_us.connect('activate', self.connect_us)
+        # item_jp.connect('activate', self.connect_jp)
+        # item_ireland.connect('activate', self.connect_ireland)
+        # item_fr.connect('activate', self.connect_fr)
+        # item_iceland.connect('activate', self.connect_iceland)
 
         item_stop.connect('activate', self.connect_stop)
-
+        item_settings.connect('activate', self.settings)
         item_quit.connect('activate', self.quit)
 
         # menu placing
         menu.append(self.item_1)
-        menu.append(item_us)
-        menu.append(item_jp)
-        menu.append(item_ireland)
-        menu.append(item_fr)
-        menu.append(item_iceland)
+        menu.append(self.item_2)
+        menu.append(self.item_3)
+        menu.append(self.item_4)
+        menu.append(self.item_5)
+        menu.append(self.item_6)
+        # menu.append(item_us)
+        # menu.append(item_jp)
+        # menu.append(item_ireland)
+        # menu.append(item_fr)
+        # menu.append(item_iceland)
         # Stop vpn
         menu.append(item_stop)
         # separator
@@ -111,30 +127,49 @@ class Indicator():
         self.do_run = False
         Gtk.main_quit()
 
-    def connect_custom(self, source):
-        commande = data["custom"]
+    def connect_item1(self, source):
+        commande = data["it1c"]
         os.system(commande)
-        # os.system("notify-send 'Trying to connect to custom'")
 
-    def connect_us(self, source):
-        os.system("nordvpn c us")
-        # os.system("notify-send 'Trying to connect to USA'")
+    def connect_item2(self, source):
+        commande = data["it2c"]
+        os.system(commande)
 
-    def connect_jp(self, source):
-        os.system("nordvpn c jp")
-        # os.system("notify-send 'Trying to connect to Japan'")
+    def connect_item3(self, source):
+        commande = data["it3c"]
+        os.system(commande)
 
-    def connect_ireland(self, source):
-        os.system("nordvpn c ireland")
-        # os.system("notify-send 'Trying to connect to Ireland'")
+    def connect_item4(self, source):
+        commande = data["it4c"]
+        os.system(commande)
 
-    def connect_fr(self, source):
-        os.system("nordvpn c fr")
-        # os.system("notify-send 'Trying to connect to France'")
+    def connect_item5(self, source):
+        commande = data["it5c"]
+        os.system(commande)
 
-    def connect_iceland(self, source):
-        os.system("nordvpn c iceland")
-        # os.system("notify-send 'Trying to connect to Iceland'")
+    def connect_item6(self, source):
+        commande = data["it6c"]
+        os.system(commande)
+
+    # def connect_us(self, source):
+    #     os.system("nordvpn c us")
+    #     # os.system("notify-send 'Trying to connect to USA'")
+
+    # def connect_jp(self, source):
+    #     os.system("nordvpn c jp")
+    #     # os.system("notify-send 'Trying to connect to Japan'")
+
+    # def connect_ireland(self, source):
+    #     os.system("nordvpn c ireland")
+    #     # os.system("notify-send 'Trying to connect to Ireland'")
+
+    # def connect_fr(self, source):
+    #     os.system("nordvpn c fr")
+    #     # os.system("notify-send 'Trying to connect to France'")
+
+    # def connect_iceland(self, source):
+    #     os.system("nordvpn c iceland")
+    #     # os.system("notify-send 'Trying to connect to Iceland'")
 
     def connect_stop(self, source):
         os.system("nordvpn d")
@@ -144,22 +179,29 @@ class Indicator():
         window = Settings()
         window.show_all()
 
-    def timer(self, timing=4):
-        time.sleep(timing)
+    def timer(self):
+        time.sleep(self.timing)
         print("timer !!")
         self.status()
 
     def status(self):
-        reg = os.popen("nordvpn status").readlines()
+        reg = os.popen(data["info_command"]).readlines()
         print(reg)
 
-        self.item_1.set_label(data["custom_name"])
+        self.item_1.set_label(data["it1n"])
+        self.item_2.set_label(data["it2n"])
+        self.item_3.set_label(data["it3n"])
+        self.item_4.set_label(data["it4n"])
+        self.item_5.set_label(data["it5n"])
+        self.item_6.set_label(data["it6n"])
 
-        status = True
-
+        status = False
+        print("green_word : " + data["green_word"])  # debug
         for i in reg:
-            if "Disconnected" in i:
-                status = False
+            if data["green_word"] in i.lower():
+                print("i : " + i.lower())  # debug
+                status = True
+                break
 
         if status:
             print("connected")
@@ -188,12 +230,12 @@ class Settings(Gtk.Window):
         Gtk.Window.__init__(self, title="Nord Manager Settings")
         # init some values
         self.info_conn = ""
-        reg = os.popen("nordvpn status").readlines()
+        reg = os.popen(data["info_command"]).readlines()
         for i in reg:
             self.info_conn += "{}\n".format(i)
         # set the window
         self.set_properties(border_width=10)
-        self.set_size_request(700, 400)
+        self.set_size_request(700, 600)
 
         # layout
         box = gtk.HBox()
@@ -204,10 +246,12 @@ class Settings(Gtk.Window):
         box.add(lbox)
         rbox = gtk.VBox()
         box.add(rbox)
+
+        # Frame info
         frame_info = gtk.Frame()
         frame_info.set_label("Curent VPN connection informations")
 
-        lbox.pack_start(frame_info, False, False, 10)
+        rbox.pack_start(frame_info, False, False, 10)
 
         info = gtk.Label(self.info_conn)
         info.set_selectable(True)
@@ -221,29 +265,91 @@ class Settings(Gtk.Window):
         Please enter a bash command
         (eg: Hong Kong) and press ENTER
         """
-        self.custom_name.set_text(data["custom_name"])
-        self.custom_name.set_tooltip_text(help_name)
-        self.custom_name_label.set_tooltip_text(help_name)
 
-        # Custom entry setting
-        self.custom_label = gtk.Label("Custom connection command:")
-        self.custom_entry = Gtk.Entry()
-        help = """
-        Please enter a bash command
-        (eg: nordvpn c hk) and press ENTER
-        """
-        self.custom_entry.set_text(data["custom"])
-        self.custom_entry.set_tooltip_text(help)
-        self.custom_label.set_tooltip_text(help)
+        # items frame
+        it_frame = gtk.Frame()
+        it_frame.set_label("Buttons settings")
+        itb = gtk.VBox()
+        it_frame.add(itb)
 
-        rbox.pack_start(self.custom_name_label, False, False, 10)
-        rbox.pack_start(self.custom_name, False, False, 10)
-        rbox.pack_start(self.custom_label, False, False, 10)
-        rbox.pack_start(self.custom_entry, False, False, 10)
+        # item 1
+        it1l = gtk.Label('Button 1:')
+        self.it1ne = gtk.Entry()
+        self.it1ne.set_placeholder_text("button name")
+        self.it1ne.set_text(data["it1n"])
+        self.it1ce = gtk.Entry()
+        self.it1ce.set_placeholder_text("bash command (eg : nordvpn c us")
+        self.it1ce.set_text(data["it1c"])
+        itb.pack_start(it1l, False, False, 0)
+        itb.pack_start(self.it1ne, False, False, 0)
+        itb.pack_start(self.it1ce, False, False, 5)
+
+        # item 2
+        it2l = gtk.Label('Button 2:')
+        self.it2ne = gtk.Entry()
+        self.it2ne.set_placeholder_text("button name")
+        self.it2ne.set_text(data["it2n"])
+        self.it2ce = gtk.Entry()
+        self.it2ce.set_placeholder_text("bash command (eg : nordvpn c us")
+        self.it2ce.set_text(data["it2c"])
+        itb.pack_start(it2l, False, False, 0)
+        itb.pack_start(self.it2ne, False, False, 0)
+        itb.pack_start(self.it2ce, False, False, 5)
+
+        # item 3
+        it3l = gtk.Label('Button 3:')
+        self.it3ne = gtk.Entry()
+        self.it3ne.set_placeholder_text("button name")
+        self.it3ne.set_text(data["it3n"])
+        self.it3ce = gtk.Entry()
+        self.it3ce.set_placeholder_text("bash command (eg : nordvpn c us")
+        self.it3ce.set_text(data["it3c"])
+        itb.pack_start(it3l, False, False, 0)
+        itb.pack_start(self.it3ne, False, False, 0)
+        itb.pack_start(self.it3ce, False, False, 5)
+
+        # item 4
+        it4l = gtk.Label('Button 4:')
+        self.it4ne = gtk.Entry()
+        self.it4ne.set_placeholder_text("button name")
+        self.it4ne.set_text(data["it4n"])
+        self.it4ce = gtk.Entry()
+        self.it4ce.set_placeholder_text("bash command (eg : nordvpn c us")
+        self.it4ce.set_text(data["it4c"])
+        itb.pack_start(it4l, False, False, 0)
+        itb.pack_start(self.it4ne, False, False, 0)
+        itb.pack_start(self.it4ce, False, False, 5)
+
+        # item 5
+        it5l = gtk.Label('Button 5:')
+        self.it5ne = gtk.Entry()
+        self.it5ne.set_placeholder_text("button name")
+        self.it5ne.set_text(data["it5n"])
+        self.it5ce = gtk.Entry()
+        self.it5ce.set_placeholder_text("bash command (eg : nordvpn c us")
+        self.it5ce.set_text(data["it5c"])
+        itb.pack_start(it5l, False, False, 0)
+        itb.pack_start(self.it5ne, False, False, 0)
+        itb.pack_start(self.it5ce, False, False, 5)
+
+        # item 6
+        it6l = gtk.Label('Button 6:')
+        self.it6ne = gtk.Entry()
+        self.it6ne.set_placeholder_text("button name")
+        self.it6ne.set_text(data["it6n"])
+        self.it6ce = gtk.Entry()
+        self.it6ce.set_placeholder_text("bash command (eg : nordvpn c us")
+        self.it6ce.set_text(data["it6c"])
+        itb.pack_start(it6l, False, False, 0)
+        itb.pack_start(self.it6ne, False, False, 0)
+        itb.pack_start(self.it6ce, False, False, 5)
+
+
+        lbox.pack_start(it_frame, False, False, 10)
 
         # Emergency setting
         self.emergency_label = gtk.Label(
-            "Emergency command if the VPN is disconnected")
+            "Emergency kill (command if the VPN is disconnected)")
         self.emergency_entry = Gtk.Entry()
         help = """
         Please enter a bash command
@@ -252,21 +358,31 @@ class Settings(Gtk.Window):
         self.emergency_entry.set_text(data["emergency"])
         self.emergency_entry.set_tooltip_text(help)
         self.emergency_label.set_tooltip_text(help)
-        rbox.pack_start(self.emergency_label, False, False, 10)
-        rbox.pack_start(self.emergency_entry, False, False, 10)
+        lbox.pack_start(self.emergency_label, False, False, 10)
+        lbox.pack_start(self.emergency_entry, False, False, 10)
 
         # Save settings button
         save_button = Gtk.Button.new_from_stock(Gtk.STOCK_SAVE)
         save_button.set_always_show_image(True)
         save_button.connect('clicked', self.save_data)
-        rbox.pack_start(save_button, False, False, 10)
+        lbox.pack_start(save_button, False, False, 10)
 
     def save_data(self, widget):
-        data["custom"] = self.custom_entry.get_text()
-        data["custom_name"] = self.custom_name.get_text()
+        data["it1n"] = self.it1ne.get_text()
+        data["it1c"] = self.it1ce.get_text()
+        data["it2n"] = self.it2ne.get_text()
+        data["it2c"] = self.it2ce.get_text()
+        data["it3n"] = self.it3ne.get_text()
+        data["it3c"] = self.it3ce.get_text()
+        data["it4n"] = self.it4ne.get_text()
+        data["it4c"] = self.it4ce.get_text()
+        data["it5n"] = self.it5ne.get_text()
+        data["it5c"] = self.it5ce.get_text()
+        data["it6n"] = self.it6ne.get_text()
+        data["it6c"] = self.it6ce.get_text()
         data["emergency"] = self.emergency_entry.get_text()
         record_data(data)
-        os.system("notify-send 'data recorded'")
+        os.system("notify-send 'Nord Manager data recorded'")
 
 
 indic = Indicator()

@@ -1,1 +1,1 @@
-{"emergency": "killall transmission-gtk", "custom": "nordvpn c hk", "custom_name": "Hong Kong"}
+{"emergency": "killall transmission-gtk", "it1c": "nordvpn c hk", "it1n": "Hong Kong", "it2c": "nordvpn c us", "it2n": "USA", "it3c": "nordvpn c jp", "it3n": "Japan", "it4c": "nordvpn c fr", "it4n": "France", "it5c": "nordvpn c uk", "it5n": "United Kingdom", "it6c": "nordvpn c ireland", "it6n": "Ireland", "green_word": " connected", "timing": 4, "info_command": "nordvpn status"}
