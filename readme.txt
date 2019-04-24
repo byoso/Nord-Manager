@@ -52,7 +52,7 @@ deactivate it by commenting the line ("#" at the begining)
 
 If you want to contact me, i'm quite easy to join :
 Vincent Fabre
-<peigne-plume@gmail.com>
+<peigne-plume-at-gmail.com>
 
 
 
