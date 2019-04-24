@@ -18,11 +18,14 @@ sudo cp app/nordmanager.sh /usr/bin/
 # =============== /OPT/NORDMANAGER
 sudo mkdir -p /opt/NordManager/
 sudo cp app/nordmanager.py /opt/NordManager/
+sudo cp app/toolbox.py /opt/NordManager/
+sudo cp app/Peigne-plume-256-320.png /opt/NordManager/
 
 
 # =============== settings file
 sudo mkdir -p ~/.local/share/NordManager/
 sudo cp app/data.json ~/.local/share/NordManager/
+sudo cp app/default_data.json ~/.local/share/NordManager/
 
 
 # =============== RIGHTS

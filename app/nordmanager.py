@@ -7,11 +7,10 @@ import json
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk as gtk
-from gi.repository import Gtk, AppIndicator3
+from gi.repository import Gtk, AppIndicator3, GdkPixbuf
 from threading import Thread
+from toolbox import *
 
-
-info_conn = ""
 
 #========== Some globaly used functions ===========
 
@@ -37,13 +36,10 @@ data = load_data()
 
 class Indicator():
     def __init__(self):
-        self.timing = data["timing"]
+        self.timing = int(data["timing"])
         print("timing:" + str(self.timing))  # debug
-        # info_conn = "truc"
         self.do_run = True
         self.ex_status = False
-        # local_rep = os.path.expanduser("~/.local/share/NordManager/")
-        # self.vpn_command = local_rep + "vpn_command.txt"
         app = 'Nord VPN Manager'
         iconpath = "/usr/share/pixmaps/icon_nordvpn_red.png"
         self.indicator = AppIndicator3.Indicator.new(
@@ -64,17 +60,19 @@ class Indicator():
         self.item_4 = Gtk.MenuItem(data["it4n"])
         self.item_5 = Gtk.MenuItem(data["it5n"])
         self.item_6 = Gtk.MenuItem(data["it6n"])
-        # item_us = gtk.MenuItem('USA')
-        # item_jp = gtk.MenuItem('Japan')
-        # item_ireland = gtk.MenuItem('Ireland')
-        # item_fr = gtk.MenuItem('France')
-        # item_iceland = gtk.MenuItem('Iceland')
+
         # Stop VPN
-        item_stop = Gtk.MenuItem('** Close VPN connection **')
+        item_stop = Gtk.ImageMenuItem('Close VPN connection')
+        item_stop.set_image(Gtk.Image.new_from_icon_name("network-offline", Gtk.IconSize(5)))
+
         # settings
-        item_settings = gtk.MenuItem('Settings')
+        item_settings = gtk.ImageMenuItem('Settings')
+        item_settings.set_image(Gtk.Image.new_from_icon_name("preferences-other", Gtk.IconSize(5)))
+
         # Quit
-        item_quit = Gtk.MenuItem('Quit')
+        item_quit = Gtk.ImageMenuItem('Quit')
+        item_quit.set_image(Gtk.Image.new_from_icon_name("process-stop", Gtk.IconSize(5)))
+
 
         # connect to callbacks
         self.item_1.connect('activate', self.connect_item1)
@@ -83,12 +81,6 @@ class Indicator():
         self.item_4.connect('activate', self.connect_item4)
         self.item_5.connect('activate', self.connect_item5)
         self.item_6.connect('activate', self.connect_item6)
-
-        # item_us.connect('activate', self.connect_us)
-        # item_jp.connect('activate', self.connect_jp)
-        # item_ireland.connect('activate', self.connect_ireland)
-        # item_fr.connect('activate', self.connect_fr)
-        # item_iceland.connect('activate', self.connect_iceland)
 
         item_stop.connect('activate', self.connect_stop)
         item_settings.connect('activate', self.settings)
@@ -101,20 +93,18 @@ class Indicator():
         menu.append(self.item_4)
         menu.append(self.item_5)
         menu.append(self.item_6)
-        # menu.append(item_us)
-        # menu.append(item_jp)
-        # menu.append(item_ireland)
-        # menu.append(item_fr)
-        # menu.append(item_iceland)
+
         # Stop vpn
         menu.append(item_stop)
         # separator
         menu_sep_1 = Gtk.SeparatorMenuItem()
+        menu_sep_2 = Gtk.SeparatorMenuItem()
         menu.append(menu_sep_1)
         menu.append(item_settings)
-        # separator
-        menu_sep_2 = Gtk.SeparatorMenuItem()
         menu.append(menu_sep_2)
+        # # separator
+        # menu_sep_3 = Gtk.SeparatorMenuItem()
+        # menu.append(menu_sep_3)
         # quit
         menu.append(item_quit)
 
@@ -151,26 +141,6 @@ class Indicator():
         commande = data["it6c"]
         os.system(commande)
 
-    # def connect_us(self, source):
-    #     os.system("nordvpn c us")
-    #     # os.system("notify-send 'Trying to connect to USA'")
-
-    # def connect_jp(self, source):
-    #     os.system("nordvpn c jp")
-    #     # os.system("notify-send 'Trying to connect to Japan'")
-
-    # def connect_ireland(self, source):
-    #     os.system("nordvpn c ireland")
-    #     # os.system("notify-send 'Trying to connect to Ireland'")
-
-    # def connect_fr(self, source):
-    #     os.system("nordvpn c fr")
-    #     # os.system("notify-send 'Trying to connect to France'")
-
-    # def connect_iceland(self, source):
-    #     os.system("nordvpn c iceland")
-    #     # os.system("notify-send 'Trying to connect to Iceland'")
-
     def connect_stop(self, source):
         os.system("nordvpn d")
         os.system("notify-send '!!!! VPN disconnected !!!!'")
@@ -178,6 +148,12 @@ class Indicator():
     def settings(self, source):
         window = Settings()
         window.show_all()
+
+    def about(self, widget):#finally not used
+        print("about clicked !")
+        dialog = PopUpAbout(self)
+        response = dialog.run()
+        dialog.destroy()
 
     def timer(self):
         time.sleep(self.timing)
@@ -194,6 +170,7 @@ class Indicator():
         self.item_4.set_label(data["it4n"])
         self.item_5.set_label(data["it5n"])
         self.item_6.set_label(data["it6n"])
+        self.timing = int(data["timing"])
 
         status = False
         print("green_word : " + data["green_word"])  # debug
@@ -256,15 +233,6 @@ class Settings(Gtk.Window):
         info = gtk.Label(self.info_conn)
         info.set_selectable(True)
         frame_info.add(info)
-
-        # Custom_name setting
-
-        self.custom_name_label = gtk.Label("Choose a connection name:")
-        self.custom_name = Gtk.Entry()
-        help_name = """
-        Please enter a bash command
-        (eg: Hong Kong) and press ENTER
-        """
 
         # items frame
         it_frame = gtk.Frame()
@@ -344,7 +312,6 @@ class Settings(Gtk.Window):
         itb.pack_start(self.it6ne, False, False, 0)
         itb.pack_start(self.it6ce, False, False, 5)
 
-
         lbox.pack_start(it_frame, False, False, 10)
 
         # Emergency setting
@@ -353,7 +320,7 @@ class Settings(Gtk.Window):
         self.emergency_entry = Gtk.Entry()
         help = """
         Please enter a bash command
-        (eg: killall -9 transmission-gtk) and press ENTER
+        (eg: killall transmission-gtk)
         """
         self.emergency_entry.set_text(data["emergency"])
         self.emergency_entry.set_tooltip_text(help)
@@ -365,24 +332,129 @@ class Settings(Gtk.Window):
         save_button = Gtk.Button.new_from_stock(Gtk.STOCK_SAVE)
         save_button.set_always_show_image(True)
         save_button.connect('clicked', self.save_data)
-        lbox.pack_start(save_button, False, False, 10)
+        lbox.pack_end(save_button, False, False, 10)
+
+        # advanced settings
+        addvanced_frame = gtk.Frame()
+        addvanced_frame.set_label("Advanced settings")
+        addvanced_frame_b = gtk.VBox()
+        addvanced_frame.add(addvanced_frame_b)
+        rbox.pack_start(addvanced_frame, False, False, 10)
+
+        # TIMING
+        timing_l = gtk.Label('timing (cycle duration, must be a number):')
+        self.timing = gtk.Entry()
+        self.timing.set_text(data["timing"])
+        addvanced_frame_b.pack_start(timing_l, False, False, 0)
+        addvanced_frame_b.pack_start(self.timing, False, False, 5)
+
+        # green_word
+        green_word_l = gtk.Label('Green word (triggers the green status):')
+        self.green_word = gtk.Entry()
+        self.green_word.set_text(data["green_word"])
+        addvanced_frame_b.pack_start(green_word_l, False, False, 0)
+        addvanced_frame_b.pack_start(self.green_word, False, False, 5)
+
+        # info_command
+        info_command_l = gtk.Label(
+            'Info command (returns the VPN conection infos):')
+        self.info_command = gtk.Entry()
+        self.info_command.set_text(data["info_command"])
+        addvanced_frame_b.pack_start(info_command_l, False, False, 0)
+        addvanced_frame_b.pack_start(self.info_command, False, False, 5)
+
+        # Back to default
+        default_button = Gtk.Button("Load default values")
+        default_button.set_always_show_image(True)
+        default_button.connect('clicked', self.default_data)
+        rbox.pack_end(default_button, False, False, 10)
+
+        #about
+        about_button = Gtk.Button.new_from_stock(Gtk.STOCK_ABOUT)
+        about_button.set_always_show_image(True)
+        about_button.connect('clicked', self.about)
+        rbox.pack_end(about_button, False, False, 10)
+
+
+    def about(self, widget):
+        print("about clicked !")
+        dialog = PopUpAbout(self)
+        response = dialog.run()
+        dialog.destroy()
+
 
     def save_data(self, widget):
-        data["it1n"] = self.it1ne.get_text()
-        data["it1c"] = self.it1ce.get_text()
-        data["it2n"] = self.it2ne.get_text()
-        data["it2c"] = self.it2ce.get_text()
-        data["it3n"] = self.it3ne.get_text()
-        data["it3c"] = self.it3ce.get_text()
-        data["it4n"] = self.it4ne.get_text()
-        data["it4c"] = self.it4ce.get_text()
-        data["it5n"] = self.it5ne.get_text()
-        data["it5c"] = self.it5ce.get_text()
-        data["it6n"] = self.it6ne.get_text()
-        data["it6c"] = self.it6ce.get_text()
-        data["emergency"] = self.emergency_entry.get_text()
-        record_data(data)
-        os.system("notify-send 'Nord Manager data recorded'")
+        try:
+            nbr = int(self.timing.get_text())
+            assert nbr > 0
+            message = "ok"
+        except AssertionError:
+            message = "ERROR: timing must be greater than 0."
+        except:
+            message = "ERROR: timing must be a number"
+
+        finally:
+            if message == "ok":
+                data["it1n"] = self.it1ne.get_text()
+                data["it1c"] = self.it1ce.get_text()
+                data["it2n"] = self.it2ne.get_text()
+                data["it2c"] = self.it2ce.get_text()
+                data["it3n"] = self.it3ne.get_text()
+                data["it3c"] = self.it3ce.get_text()
+                data["it4n"] = self.it4ne.get_text()
+                data["it4c"] = self.it4ce.get_text()
+                data["it5n"] = self.it5ne.get_text()
+                data["it5c"] = self.it5ce.get_text()
+                data["it6n"] = self.it6ne.get_text()
+                data["it6c"] = self.it6ce.get_text()
+                data["emergency"] = self.emergency_entry.get_text()
+                data["timing"] = self.timing.get_text()
+                data["green_word"] = self.green_word.get_text()
+                data["info_command"] = self.info_command.get_text()
+                record_data(data)
+                os.system("notify-send 'Nord Manager: settings saved'")
+            else:
+                os.system("notify-send '{}'".format(message))
+
+    def default_data(self, widget):
+
+        default_data = os.path.join(local_rep, "default_data.json")
+        with open(default_data, 'r') as file:
+            default_data = json.load(file)
+
+        self.it1ne.set_text(default_data["it1n"])
+        self.it1ce.set_text(default_data["it1c"])
+        self.it2ne.set_text(default_data["it2n"])
+        self.it2ce.set_text(default_data["it2c"])
+        self.it3ne.set_text(default_data["it3n"])
+        self.it3ce.set_text(default_data["it3c"])
+        self.it4ne.set_text(default_data["it4n"])
+        self.it4ce.set_text(default_data["it4c"])
+        self.it5ne.set_text(default_data["it5n"])
+        self.it5ce.set_text(default_data["it5c"])
+        self.it6ne.set_text(default_data["it6n"])
+        self.it6ce.set_text(default_data["it6c"])
+        self.emergency_entry.set_text(default_data["emergency"])
+        self.timing.set_text(default_data["timing"])
+        self.green_word.set_text(default_data["green_word"])
+        self.info_command.set_text(default_data["info_command"])
+
+
+class PopUpAbout(Gtk.AboutDialog):
+
+    def __init__(self, parent):
+        Gtk.Dialog.__init__(self, "About Nord Manager", parent, Gtk.DialogFlags.MODAL)
+        #self.set_size_request(300,400)
+        self.set_comments("Non official Nord VPN Manager GUI")
+        self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
+        self.set_copyright("Copyright 2019 Fabre Vincent <peigne-plume@laposte.net>")
+        self.set_version("1.0")
+        self.set_authors(["Vincent Fabre, <peigne-plume@laposte.net>"])
+        self.set_license_type(Gtk.License.BSD)
+        self.set_program_name("Nord Manager")
+        self.set_license(license_BSD)
+
+        self.show_all()
 
 
 indic = Indicator()

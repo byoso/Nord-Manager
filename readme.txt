@@ -35,7 +35,7 @@ don't forget to RTFM : man nordvpn
 nord VPN it is "nordvpn status"
 
 - green word : by default it is " connected" (note the space before the 
-word, otherwise there would be a confusion with the "disconnected" string.
+word, otherwise there will be a confusion with the "disconnected" string.
 The green word triggers the green status of the app if detected in 
 the current VPN connection information.
 
@@ -46,5 +46,15 @@ it is 4 (seconds).
 This is a bash command that prevent the use of some app if the VPN is
 not connected, typicaly : "killall transmission-gtk". You can simply
 deactivate it by commenting the line ("#" at the begining)
+
+====================================================================
+- Contact me (for any good reason):
+
+If you want to contact me, i'm quite easy to join :
+Vincent Fabre
+<peigne-plume@gmail.com>
+
+
+
 
 
