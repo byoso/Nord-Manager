@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# ==========Dependencies (needed in Ubuntu)
+
+sudo apt install gir1.2-appindicator3-0.1
+
 # =============== PIXMAPS
 sudo cp app/icon_nordvpn.png /usr/share/pixmaps/
 sudo cp app/icon_nordvpn_red.png /usr/share/pixmaps/
