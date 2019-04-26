@@ -12,7 +12,7 @@ launched automaticly when the system starts.
 
 ===================================================================
 
-- To install :
+- To install (be sure you have nordvpn installed first):
 ./install.sh
 enter your admin code, and then it works.
 

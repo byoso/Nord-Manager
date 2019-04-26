@@ -342,9 +342,12 @@ class Settings(Gtk.Window):
         rbox.pack_start(addvanced_frame, False, False, 10)
 
         # TIMING
-        timing_l = gtk.Label('timing (cycle duration, must be a number):')
-        self.timing = gtk.Entry()
-        self.timing.set_text(data["timing"])
+        timing_l = gtk.Label('timing (cycle duration):')
+        self.timing = gtk.SpinButton()
+        self.timing.set_numeric(True)
+        self.timing.set_range(1, 30)
+        self.timing.set_increments(1,-1)
+        self.timing.set_value(data["timing"])
         addvanced_frame_b.pack_start(timing_l, False, False, 0)
         addvanced_frame_b.pack_start(self.timing, False, False, 5)
 
@@ -408,7 +411,7 @@ class Settings(Gtk.Window):
                 data["it6n"] = self.it6ne.get_text()
                 data["it6c"] = self.it6ce.get_text()
                 data["emergency"] = self.emergency_entry.get_text()
-                data["timing"] = self.timing.get_text()
+                data["timing"] = self.timing.get_value()
                 data["green_word"] = self.green_word.get_text()
                 data["info_command"] = self.info_command.get_text()
                 record_data(data)
@@ -435,7 +438,7 @@ class Settings(Gtk.Window):
         self.it6ne.set_text(default_data["it6n"])
         self.it6ce.set_text(default_data["it6c"])
         self.emergency_entry.set_text(default_data["emergency"])
-        self.timing.set_text(default_data["timing"])
+        self.timing.set_value(default_data["timing"])
         self.green_word.set_text(default_data["green_word"])
         self.info_command.set_text(default_data["info_command"])
 
