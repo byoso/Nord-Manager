@@ -35,7 +35,7 @@ don't forget to RTFM : man nordvpn
 nord VPN it is "nordvpn status"
 
 - green word : by default it is " connected" (note the space before the 
-word, otherwise there will be a confusion with the "disconnected" string.
+word, otherwise there will be a confusion with the "disconnected" string).
 The green word triggers the green status of the app if detected in 
 the current VPN connection information.
 
@@ -52,7 +52,7 @@ deactivate it by commenting the line ("#" at the begining)
 
 If you want to contact me, i'm quite easy to join :
 Vincent Fabre
-<peigne-plume-at-gmail.com>
+<peigne.plume-at-gmail.com>
 
 
 
