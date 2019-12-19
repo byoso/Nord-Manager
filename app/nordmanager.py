@@ -47,7 +47,7 @@ class Indicator():
             AppIndicator3.IndicatorCategory.OTHER)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.indicator.set_menu(self.create_menu())
-        self.indicator.set_label("Nord VPN Manager", app)
+        # self.indicator.set_label("Nord VPN Manager", app)
         Thread(target=self.timer).start()
 
     def create_menu(self):
