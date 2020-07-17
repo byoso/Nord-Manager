@@ -143,7 +143,7 @@ class Indicator():
 
     def connect_stop(self, source):
         os.system("nordvpn d")
-        os.system("notify-send '!!!! VPN disconnected !!!!'")
+        # os.system("notify-send '!!!! VPN disconnected !!!!'")
 
     def settings(self, source):
         window = Settings()
@@ -184,12 +184,12 @@ class Indicator():
             print("connected")
             self.indicator.set_icon(
                 "/usr/share/pixmaps/icon_nordvpn_green.png")
-            # Notify connexion settnigs when new connection
+            # Notify connexion settnigs when new connection ============== à modifier pour supprimer la notification en doublette
             if self.ex_status != status:
                 self.info_conn = ""
                 for i in reg:
                     self.info_conn += "{}".format(i)
-                os.system("notify-send '{}'".format(self.info_conn))
+                # os.system("notify-send '{}'".format(self.info_conn))
 
         else:
             print("disconnected")
@@ -212,13 +212,26 @@ class Settings(Gtk.Window):
             self.info_conn += "{}\n".format(i)
         # set the window
         self.set_properties(border_width=10)
-        self.set_size_request(700, 600)
+        self.set_default_size(800, 600)
+        self.set_size_request(400, 400)
+
+
+        scroll = gtk.ScrolledWindow()
+        self.add(scroll)
+
+        viewport = gtk.Viewport()
+        scroll.add(viewport)
+
+
+
+
 
         # layout
         box = gtk.HBox()
         box.set_homogeneous(True)
         box.set_spacing(10)
-        self.add(box)
+        viewport.add(box)
+        # self.add(box)
         lbox = gtk.VBox()
         box.add(lbox)
         rbox = gtk.VBox()
@@ -451,7 +464,7 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_comments("Non official Nord VPN Manager GUI")
         self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
         self.set_copyright("Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
-        self.set_version("1.1")
+        self.set_version("1.2")
         self.set_authors(["Vincent Fabre, <peigne.plume@gmail.com>"])
         self.set_license_type(Gtk.License.BSD)
         self.set_program_name("Nord Manager")
