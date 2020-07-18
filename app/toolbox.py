@@ -4,7 +4,7 @@
 import os
 import re
 
-license_BSD = """Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>
+license_BSD = """Copyright 2019-2020 Fabre Vincent <peigne.plume@gmail.com>
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

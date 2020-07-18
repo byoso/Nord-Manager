@@ -15,7 +15,6 @@ from toolbox import *
 #========== Some globaly used functions ===========
 # os.popen('nordvpn countries >> countries.txt')#debug
 text = os.popen('nordvpn countries')#.readlines()
-# countries = reg(text)
 countries = reg(text)
 for i in countries:
     print(i)
@@ -477,6 +476,8 @@ class Browser(Gtk.Window):
         self.viewport = gtk.Viewport()
         self.scroll.add(self.viewport)
 
+        text = os.popen('nordvpn countries')#.readlines()
+        countries = reg(text)
 
         # boxes
         self.box = gtk.VBox()
@@ -515,7 +516,7 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_comments("Non official Nord VPN Manager GUI")
         self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
         self.set_copyright("Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
-        self.set_version("1.3.1")
+        self.set_version("1.3.3")
         self.set_authors(["Vincent Fabre, <peigne.plume@gmail.com>"])
         self.set_license_type(Gtk.License.BSD)
         self.set_program_name("Nord Manager")
