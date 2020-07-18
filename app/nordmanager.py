@@ -14,6 +14,7 @@ from toolbox import *
 
 #========== Some globaly used functions ===========
 
+
 local_rep = os.path.expanduser("~/.local/share/NordManager/")
 data_file = os.path.join(local_rep, "data.json")
 
@@ -53,7 +54,8 @@ class Indicator():
     def create_menu(self):
         menu = Gtk.Menu()
 
-        # menu items
+        # menu items*
+        self.item_browse = Gtk.MenuItem("Browse...")
         self.item_1 = Gtk.MenuItem(data["it1n"])
         self.item_2 = Gtk.MenuItem(data["it2n"])
         self.item_3 = Gtk.MenuItem(data["it3n"])
@@ -75,6 +77,7 @@ class Indicator():
 
 
         # connect to callbacks
+        self.item_browse.connect('activate', self.connect_browse)
         self.item_1.connect('activate', self.connect_item1)
         self.item_2.connect('activate', self.connect_item2)
         self.item_3.connect('activate', self.connect_item3)
@@ -87,6 +90,9 @@ class Indicator():
         item_quit.connect('activate', self.quit)
 
         # menu placing
+        menu_sep_browser = Gtk.SeparatorMenuItem()
+        menu.append(self.item_browse)
+        menu.append(menu_sep_browser)
         menu.append(self.item_1)
         menu.append(self.item_2)
         menu.append(self.item_3)
@@ -102,10 +108,7 @@ class Indicator():
         menu.append(menu_sep_1)
         menu.append(item_settings)
         menu.append(menu_sep_2)
-        # # separator
-        # menu_sep_3 = Gtk.SeparatorMenuItem()
-        # menu.append(menu_sep_3)
-        # quit
+
         menu.append(item_quit)
 
         menu.show_all()
@@ -116,6 +119,17 @@ class Indicator():
     def quit(self, source):
         self.do_run = False
         Gtk.main_quit()
+
+    def connect_browse(self, source):
+        commande = "notify-send 'click on browse'"
+        print('======Browser')
+        browser(text)
+        os.system(commande)
+        window = Browser()
+        window.show_all()
+
+
+    
 
     def connect_item1(self, source):
         commande = data["it1c"]
@@ -162,7 +176,7 @@ class Indicator():
 
     def status(self):
         reg = os.popen(data["info_command"]).readlines()
-        print(reg)
+        print(reg)#debug
 
         self.item_1.set_label(data["it1n"])
         self.item_2.set_label(data["it2n"])
@@ -215,23 +229,18 @@ class Settings(Gtk.Window):
         self.set_default_size(800, 600)
         self.set_size_request(400, 400)
 
-
+        # scrolling window
         scroll = gtk.ScrolledWindow()
         self.add(scroll)
 
         viewport = gtk.Viewport()
         scroll.add(viewport)
 
-
-
-
-
-        # layout
+        # boxes
         box = gtk.HBox()
         box.set_homogeneous(True)
         box.set_spacing(10)
         viewport.add(box)
-        # self.add(box)
         lbox = gtk.VBox()
         box.add(lbox)
         rbox = gtk.VBox()
@@ -456,6 +465,55 @@ class Settings(Gtk.Window):
         self.info_command.set_text(default_data["info_command"])
 
 
+class Browser(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self, title="Nord Manager browser")
+        # set the window
+        self.set_properties(border_width=10)
+        self.set_default_size(300, 500)
+        self.set_size_request(300, 200)
+
+        # scrolling window
+        self.scroll = gtk.ScrolledWindow()
+        self.add(self.scroll)
+        self.viewport = gtk.Viewport()
+        self.scroll.add(self.viewport)
+
+
+        # boxes
+        self.box = gtk.VBox()
+        self.viewport.add(self.box)
+
+
+        message_box = Gtk.HBox()
+        self.box.add(message_box)
+        self.message = Gtk.Label("Choose a country :")
+        self.message.set_selectable(True)
+        message_box.pack_start(self.message, True, True, 2)
+
+        # countries = reg(text)
+        countries = reg(text)
+        for i in countries:
+            print(i)
+
+        for country in countries:
+            box = Gtk.HBox()
+            self.button = Gtk.Button(country)
+            print(country)
+            self.button2 = Gtk.Button("+")
+            box.pack_start(self.button, True, True, 0)
+            self.button.connect('clicked', self.connecting, country)
+            box.pack_start(self.button2, False, False, 0)
+            self.box.pack_start(box, True, True, 0)
+
+    def connecting(self, source, country):
+        command = "nordvpn c {}".format(country.lower())
+        print("click")
+        self.message.set_label("{} \n(please wait for the green light)".format(command))
+        print(command)
+        os.system(command)
+
+
 class PopUpAbout(Gtk.AboutDialog):
 
     def __init__(self, parent):
@@ -471,7 +529,6 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_license(license_BSD)
 
         self.show_all()
-
 
 indic = Indicator()
 signal.signal(signal.SIGINT, signal.SIG_DFL)
