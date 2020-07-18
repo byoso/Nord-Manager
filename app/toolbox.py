@@ -15,20 +15,30 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
 
 
-text = os.popen('nordvpn countries').readlines()
+
 
 def tri(text):
+    # os.system("notify-send 'Dans tri'")#debug
     list_out=[]
     for line in text:
         line = line.strip()
-        # print(line)
-        cutting = line.split("\t")
+        line = line.strip("-")
+        print("==",line)
+        if "," in line:
+            # os.system("notify-send 'systeme à virgules !!'")#debug
+            cutting = line.split(", ")
+        else:
+            cutting = line.split("\t")
         # print(cutting)
         for c in cutting:
-            list_out.append(c)        
+            list_out.append(c)      
+    
+    # os.system("notify-send 'cutting : {}'".format(cutting))#debug
+    # os.system("notify-send 'list_out : {}'".format(list_out))#debug
     return list_out
 
 def reg(text):
+    # os.system("notify-send 'Dans reg'")#debug
     liste = tri(text)
     liste2 = []
     for i in liste:
@@ -46,5 +56,3 @@ def menu_builder(text):
     for i in reg(text):
         print(i)
 
-def browser(text):
-    pass

@@ -13,8 +13,8 @@ from toolbox import *
 
 
 #========== Some globaly used functions ===========
-
-
+# os.popen('nordvpn countries >> countries.txt')#debug
+text = os.popen('nordvpn countries')#.readlines()
 local_rep = os.path.expanduser("~/.local/share/NordManager/")
 data_file = os.path.join(local_rep, "data.json")
 
@@ -121,15 +121,9 @@ class Indicator():
         Gtk.main_quit()
 
     def connect_browse(self, source):
-        commande = "notify-send 'click on browse'"
         print('======Browser')
-        browser(text)
-        os.system(commande)
         window = Browser()
         window.show_all()
-
-
-    
 
     def connect_item1(self, source):
         commande = data["it1c"]
@@ -198,7 +192,6 @@ class Indicator():
             print("connected")
             self.indicator.set_icon(
                 "/usr/share/pixmaps/icon_nordvpn_green.png")
-            # Notify connexion settnigs when new connection ============== à modifier pour supprimer la notification en doublette
             if self.ex_status != status:
                 self.info_conn = ""
                 for i in reg:
@@ -484,7 +477,6 @@ class Browser(Gtk.Window):
         self.box = gtk.VBox()
         self.viewport.add(self.box)
 
-
         message_box = Gtk.HBox()
         self.box.add(message_box)
         self.message = Gtk.Label("Choose a country :")
@@ -496,14 +488,17 @@ class Browser(Gtk.Window):
         for i in countries:
             print(i)
 
+        # os.system("notify-send 'countries : {}'".format(countries))#debug
+
         for country in countries:
             box = Gtk.HBox()
-            self.button = Gtk.Button(country)
-            print(country)
-            self.button2 = Gtk.Button("+")
-            box.pack_start(self.button, True, True, 0)
-            self.button.connect('clicked', self.connecting, country)
-            box.pack_start(self.button2, False, False, 0)
+            button = Gtk.Button(country)
+            print(country)#debug
+            # os.system("notify-send 'country : {}'".format(country))#debug
+            button2 = Gtk.Button("+")
+            box.pack_start(button, True, True, 0)
+            button.connect('clicked', self.connecting, country)
+            box.pack_start(button2, False, False, 0)
             self.box.pack_start(box, True, True, 0)
 
     def connecting(self, source, country):
@@ -522,7 +517,7 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_comments("Non official Nord VPN Manager GUI")
         self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
         self.set_copyright("Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
-        self.set_version("1.2")
+        self.set_version("1.3")
         self.set_authors(["Vincent Fabre, <peigne.plume@gmail.com>"])
         self.set_license_type(Gtk.License.BSD)
         self.set_program_name("Nord Manager")
