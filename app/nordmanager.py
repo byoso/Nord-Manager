@@ -161,12 +161,6 @@ class Indicator():
         window = Settings()
         window.show_all()
 
-    def about(self, widget):#finally not used
-        print("about clicked !")
-        dialog = PopUpAbout(self)
-        response = dialog.run()
-        dialog.destroy()
-
     def timer(self):
         time.sleep(self.timing)
         print("timer !!")
@@ -236,7 +230,7 @@ class Settings(Gtk.Window):
         # boxes
         box = gtk.HBox()
         box.set_homogeneous(True)
-        box.set_spacing(10)
+        box.set_spacing(20)
         viewport.add(box)
         lbox = gtk.VBox()
         box.add(lbox)
@@ -467,7 +461,7 @@ class Browser(Gtk.Window):
         Gtk.Window.__init__(self, title="Nord Manager browser")
         # set the window
         self.set_properties(border_width=10)
-        self.set_default_size(300, 500)
+        self.set_default_size(400, 500)
         self.set_size_request(300, 200)
 
         # scrolling window
@@ -491,18 +485,47 @@ class Browser(Gtk.Window):
 
         for country in countries:
             box = Gtk.HBox()
+            # gbox = Gtk.Grid()
             button = Gtk.Button(country)
             print(country)#debug
             # os.system("notify-send 'country : {}'".format(country))#debug
-            button2 = Gtk.Button("+")
-            box.pack_start(button, True, True, 0)
+            cities = reg(os.popen("nordvpn cities {}".format(country)))
+            print(cities)#debug
+            store = Gtk.ListStore(str)
+
+            if len(cities) > 1:
+                for city in cities:
+                    store.append([city])
+                button2 = Gtk.ComboBox.new_with_model(store)
+                button2.set_title("-- Cities --")
+                renderer_text = Gtk.CellRendererText()
+                button2.pack_start(renderer_text, True)
+                button2.add_attribute(renderer_text, "text", 0)
+                button2.set_active(0)
+                button2.connect("changed", self.combo_connecting)
+                
+            else:
+                button2 = Gtk.Button(cities[0])
+                button2.connect("clicked", self.connecting, cities[0])
+
+            box.pack_start(button, False, True, 10)
+
             button.connect('clicked', self.connecting, country)
-            box.pack_start(button2, False, False, 0)
+            box.pack_end(button2, False, False, 10)
+
             self.box.pack_start(box, True, True, 0)
 
-    def connecting(self, source, country):
-        command = "nordvpn c {}".format(country.lower())
-        print("click")
+
+    def combo_connecting(self, combo):
+        iter = combo.get_active_iter()
+        if iter is not None:
+            model = combo.get_model()
+            place = model[iter][0]
+            self.connecting(self, place)
+
+
+    def connecting(self, source, place):
+        command = "nordvpn c {}".format(place.lower())
         self.message.set_label("{} \n(please wait for the green light)".format(command))
         print(command)
         os.system(command)
@@ -516,7 +539,7 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_comments("Non official Nord VPN Manager GUI")
         self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
         self.set_copyright("Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
-        self.set_version("1.3.3")
+        self.set_version("1.4")
         self.set_authors(["Vincent Fabre, <peigne.plume@gmail.com>"])
         self.set_license_type(Gtk.License.BSD)
         self.set_program_name("Nord Manager")

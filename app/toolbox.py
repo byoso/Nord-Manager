@@ -16,7 +16,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 
 
-
 def tri(text):
     # os.system("notify-send 'Dans tri'")#debug
     list_out=[]
