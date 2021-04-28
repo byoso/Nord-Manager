@@ -466,6 +466,7 @@ class Browser(Gtk.Window):
         self.header_bar = gtk.HeaderBar()
         self.header_bar.set_show_close_button(True)
         self.header_bar.set_title("Nord Manager browser")
+        self.header_bar.set_subtitle('Choose a country or a city') 
         self.set_titlebar(self.header_bar)
         # spinner
         self.spinner = gtk.Spinner.new()
@@ -489,12 +490,6 @@ class Browser(Gtk.Window):
         # boxes
         self.box = gtk.VBox()
         self.viewport.add(self.box)
-
-        message_box = Gtk.HBox()
-        self.box.add(message_box)
-        self.message = Gtk.Label("Choose a country or a city:")
-        self.message.set_selectable(True)
-        message_box.pack_start(self.message, True, True, 2)
 
         for country in countries:
             box = Gtk.HBox()
