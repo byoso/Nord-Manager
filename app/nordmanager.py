@@ -462,6 +462,16 @@ class Settings(Gtk.Window):
 class Browser(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Nord Manager browser")
+        # headerbar
+        self.header_bar = gtk.HeaderBar()
+        self.header_bar.set_show_close_button(True)
+        self.header_bar.set_title("Nord Manager browser")
+        self.set_titlebar(self.header_bar)
+        # spinner
+        self.spinner = gtk.Spinner.new()
+        self.header_bar.pack_end(self.spinner)
+        self.spinner.start()
+
         # set the window
         self.set_properties(border_width=10)
         self.set_default_size(400, 500)
@@ -482,7 +492,7 @@ class Browser(Gtk.Window):
 
         message_box = Gtk.HBox()
         self.box.add(message_box)
-        self.message = Gtk.Label("Choose a country :")
+        self.message = Gtk.Label("Choose a country or a city:")
         self.message.set_selectable(True)
         message_box.pack_start(self.message, True, True, 2)
 
@@ -497,10 +507,11 @@ class Browser(Gtk.Window):
             store = Gtk.ListStore(str)
 
             if len(cities) > 1:
+                store.append(['-- Cities --'])
                 for city in cities:
                     store.append([city])
                 button2 = Gtk.ComboBox.new_with_model(store)
-                button2.set_title("-- Cities --")
+                # button2.set_title("-- Cities --")
                 renderer_text = Gtk.CellRendererText()
                 button2.pack_start(renderer_text, True)
                 button2.add_attribute(renderer_text, "text", 0)
@@ -520,18 +531,17 @@ class Browser(Gtk.Window):
 
 
     def combo_connecting(self, combo):
-        iter = combo.get_active_iter()
+        iter = combo.get_active_iter() #iter is a TreeIter object
         if iter is not None:
             model = combo.get_model()
             place = model[iter][0]
-            self.connecting(self, place)
-
+            if place != '-- Cities --':
+                self.connecting(self, place)
 
     def connecting(self, source, place):
         command = "nordvpn c {}".format(place.lower())
-        self.message.set_label("{} \n(please wait for the green light)".format(command))
-        print(command)
         os.system(command)
+        self.close()
 
 
 class PopUpAbout(Gtk.AboutDialog):
@@ -542,7 +552,7 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_comments("Non official Nord VPN Manager GUI")
         self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
         self.set_copyright("Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
-        self.set_version("1.4.1")
+        self.set_version("1.4.2")
         self.set_authors(["Vincent Fabre, <peigne.plume@gmail.com>"])
         self.set_license_type(Gtk.License.BSD)
         self.set_program_name("Nord Manager")
