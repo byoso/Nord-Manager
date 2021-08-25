@@ -189,8 +189,9 @@ class Indicator():
 
         if status:
             print("connected")
-            self.indicator.set_icon(
-                "/usr/share/pixmaps/icon_nordvpn_green.png")
+            self.indicator.set_icon_full(
+                icon_name="/usr/share/pixmaps/icon_nordvpn_green.png",
+                icon_desc="")
             if self.ex_status != status:
                 self.info_conn = ""
                 for i in reg:
@@ -199,7 +200,9 @@ class Indicator():
 
         else:
             print("disconnected")
-            self.indicator.set_icon("/usr/share/pixmaps/icon_nordvpn_red.png")
+            self.indicator.set_icon_full(
+                icon_name="/usr/share/pixmaps/icon_nordvpn_red.png",
+                icon_desc="")
             os.system(data["emergency"])
 
         self.ex_status = status
