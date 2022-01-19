@@ -191,7 +191,7 @@ class Indicator():
             print("connected")
             self.indicator.set_icon_full(
                 icon_name="/usr/share/pixmaps/icon_nordvpn_green.png",
-                icon_desc="")
+                icon_desc="Nord-Manager")
             if self.ex_status != status:
                 self.info_conn = ""
                 for i in reg:
@@ -202,7 +202,7 @@ class Indicator():
             print("disconnected")
             self.indicator.set_icon_full(
                 icon_name="/usr/share/pixmaps/icon_nordvpn_red.png",
-                icon_desc="")
+                icon_desc="Nord-Manager")
             os.system(data["emergency"])
 
         self.ex_status = status
@@ -469,7 +469,7 @@ class Browser(Gtk.Window):
         self.header_bar = gtk.HeaderBar()
         self.header_bar.set_show_close_button(True)
         self.header_bar.set_title("Nord Manager browser")
-        self.header_bar.set_subtitle('Choose a country or a city') 
+        self.header_bar.set_subtitle('Choose a country or a city')
         self.set_titlebar(self.header_bar)
         # spinner
         self.spinner = gtk.Spinner.new()
@@ -515,7 +515,7 @@ class Browser(Gtk.Window):
                 button2.add_attribute(renderer_text, "text", 0)
                 button2.set_active(0)
                 button2.connect("changed", self.combo_connecting)
-                
+
             else:
                 button2 = Gtk.Button(cities[0])
                 button2.connect("clicked", self.connecting, cities[0])
@@ -550,7 +550,7 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_comments("Non official Nord VPN Manager GUI")
         self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
         self.set_copyright("Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
-        self.set_version("1.4.2")
+        self.set_version("1.4.3")
         self.set_authors(["Vincent Fabre, <peigne.plume@gmail.com>"])
         self.set_license_type(Gtk.License.BSD)
         self.set_program_name("Nord Manager")

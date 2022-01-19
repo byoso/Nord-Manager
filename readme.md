@@ -8,7 +8,7 @@ This is a complete Nord VPN unoffical GUI for Linux, it also offers
 a security option to close the transmission app if the vpn is
 disconnected.
 
-As it is a very light weight application, I suggest you set it to be 
+As it is a very light weight application, I suggest you set it to be
 launched automaticly when the system starts, or not, works fine with
 a shortcut too.
 
@@ -18,6 +18,8 @@ a shortcut too.
 (be sure you have the official nordvpn installed first).
 
 ### DEBIAN, UBUNTU, MINT... :
+
+- To install :
 ```bash
 ./install.sh
 ```
@@ -32,7 +34,7 @@ and that's all !
 
 ### NON DEBIAN BASED OS:
 You will have to edit the install.sh to change the "apt" command
-to your own package manager command. 
+to your own package manager command.
 GTK in also a required dependency.
 If you still got an issue, please leave a post on github here:
 https://github.com/byoso/Nord-Manager/issues
@@ -44,7 +46,7 @@ https://github.com/byoso/Nord-Manager/issues
 have to pick the one you want, fast and easy.
 
 - 6 shortcuts buttons : this buttons are already set with default values,
-but are expected to be customized to your own needs, 
+but are expected to be customized to your own needs,
 you can set them in the settings window. Each button is defined by 2 fileds,
 the first is the name you want for your button, the second is the bash
 command line to execute when clicked. Any bash command you set here
@@ -54,7 +56,7 @@ will be executed when clicked, but the console will not be shown.
 
 ## Settings explained:
 
-- In the **directory** 
+- In the **directory**
 ```
 ~/.local/share/NordManager
 ```
@@ -68,9 +70,9 @@ don't forget to RTFM : man nordvpn
 - **info_command** : the bash command to get the status of the vpn. For
 nord VPN it is "nordvpn status"
 
-- **green word** : by default it is " connected" (note the space before the 
+- **green word** : by default it is " connected" (note the space before the
 word, otherwise there will be a confusion with the "disconnected" string).
-The green word triggers the green status of the app if detected in 
+The green word triggers the green status of the app if detected in
 the current VPN connection information.
 
 - **timing** : the length of the cycle between status checks, by default
