@@ -30,8 +30,8 @@ def tri(text):
             cutting = line.split("\t")
         # print(cutting)
         for c in cutting:
-            list_out.append(c)      
-    
+            list_out.append(c)
+
     # os.system("notify-send 'cutting : {}'".format(cutting))#debug
     # os.system("notify-send 'list_out : {}'".format(list_out))#debug
     return list_out
@@ -40,18 +40,17 @@ def reg(text):
     # os.system("notify-send 'Dans reg'")#debug
     liste = tri(text)
     liste2 = []
-    for i in liste:
-        m = re.match('(^[a-zA-Z])', i)
+    for line in liste:
+        m = re.match('(^[a-zA-Z])', line)
         # if m is None:
             # print("no match")
-        if m is not None:
+        if m is not None and "-" not in line:
             # print("match ok!")
-            i = i.strip().strip("\n")
-            liste2.append(i)
+            line = line.strip().strip("\n")
+            liste2.append(line)
     liste2.sort()
     return liste2
 
 def menu_builder(text):
     for i in reg(text):
         print(i)
-

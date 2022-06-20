@@ -12,6 +12,8 @@ As it is a very light weight application, I suggest you set it to be
 launched automaticly when the system starts, or not, works fine with
 a shortcut too.
 
+### Version 1.5.0
+Fix the bug caused by Nordvpn's add "New Feature ..."
 
 ## INSTALLATION
 

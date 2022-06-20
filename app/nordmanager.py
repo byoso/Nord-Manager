@@ -12,6 +12,7 @@ from threading import Thread
 from toolbox import *
 import re
 
+__version__ = "1.5.0"
 
 #========== Some globaly used functions ===========
 # os.popen('nordvpn countries >> countries.txt')#debug
@@ -217,10 +218,10 @@ class Settings(Gtk.Window):
         # init some values
         self.info_conn = ""
         reg = os.popen(data["info_command"]).readlines()
-        for i in reg:
-            m = re.match('([a-zA-Z])', i)
-            if m is not None:
-                self.info_conn += "{}".format(i)
+        for line in reg:
+            m = re.match('([a-zA-Z])', line)
+            if m is not None and "-" not in line:
+                self.info_conn += "{}".format(line)
         # set the window
         self.set_properties(border_width=10)
         self.set_default_size(800, 600)
@@ -550,7 +551,7 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_comments("Non official Nord VPN Manager GUI")
         self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
         self.set_copyright("Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
-        self.set_version("1.4.3")
+        self.set_version(__version__)
         self.set_authors(["Vincent Fabre, <peigne.plume@gmail.com>"])
         self.set_license_type(Gtk.License.BSD)
         self.set_program_name("Nord Manager")
