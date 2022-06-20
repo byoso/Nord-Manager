@@ -9,20 +9,20 @@ gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk as gtk
 from gi.repository import Gtk, AppIndicator3, GdkPixbuf
 from threading import Thread
-from toolbox import *
+from toolbox import reg, license_BSD
 import re
 
-__version__ = "1.5.0"
+__version__ = "2.0.0"
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 #========== Some globaly used functions ===========
-# os.popen('nordvpn countries >> countries.txt')#debug
-text = os.popen('nordvpn countries')#.readlines()
+
+text = os.popen('nordvpn countries')
 countries = reg(text)
 for i in countries:
     print(i)
-# os.system("notify-send 'countries : {}'".format(countries))#debug
-local_rep = os.path.expanduser("~/.local/share/NordManager/")
-data_file = os.path.join(local_rep, "data.json")
+data_file = os.path.join(BASE_DIR, "data.json")
 
 
 def record_data(data):
@@ -48,7 +48,7 @@ class Indicator():
         self.do_run = True
         self.ex_status = False
         app = 'Nord VPN Manager'
-        iconpath = "/usr/share/pixmaps/icon_nordvpn_red.png"
+        iconpath = os.path.join(BASE_DIR, "icon_nordvpn_red.png")
         self.indicator = AppIndicator3.Indicator.new(
             app, iconpath,
             AppIndicator3.IndicatorCategory.OTHER)
@@ -157,7 +157,6 @@ class Indicator():
 
     def connect_stop(self, source):
         os.system("nordvpn d")
-        # os.system("notify-send '!!!! VPN disconnected !!!!'")
 
     def settings(self, source):
         window = Settings()
@@ -191,18 +190,17 @@ class Indicator():
         if status:
             print("connected")
             self.indicator.set_icon_full(
-                icon_name="/usr/share/pixmaps/icon_nordvpn_green.png",
+                icon_name=os.path.join(BASE_DIR, "icon_nordvpn_green.png"),
                 icon_desc="Nord-Manager")
             if self.ex_status != status:
                 self.info_conn = ""
                 for i in reg:
                     self.info_conn += "{}".format(i)
-                # os.system("notify-send '{}'".format(self.info_conn))
 
         else:
             print("disconnected")
             self.indicator.set_icon_full(
-                icon_name="/usr/share/pixmaps/icon_nordvpn_red.png",
+                icon_name=os.path.join(BASE_DIR, "icon_nordvpn_red.png"),
                 icon_desc="Nord-Manager")
             os.system(data["emergency"])
 
@@ -366,7 +364,7 @@ class Settings(Gtk.Window):
         self.timing = gtk.SpinButton()
         self.timing.set_numeric(True)
         self.timing.set_range(1, 30)
-        self.timing.set_increments(1,-1)
+        self.timing.set_increments(1, -1)
         self.timing.set_value(data["timing"])
         addvanced_frame_b.pack_start(timing_l, False, False, 0)
         addvanced_frame_b.pack_start(self.timing, False, False, 5)
@@ -398,13 +396,11 @@ class Settings(Gtk.Window):
         about_button.connect('clicked', self.about)
         rbox.pack_end(about_button, False, False, 10)
 
-
     def about(self, widget):
         print("about clicked !")
         dialog = PopUpAbout(self)
-        response = dialog.run()
+        dialog.run()
         dialog.destroy()
-
 
     def save_data(self, widget):
         try:
@@ -441,7 +437,7 @@ class Settings(Gtk.Window):
 
     def default_data(self, widget):
 
-        default_data = os.path.join(local_rep, "default_data.json")
+        default_data = os.path.join(BASE_DIR, "default_data.json")
         with open(default_data, 'r') as file:
             default_data = json.load(file)
 
@@ -488,7 +484,7 @@ class Browser(Gtk.Window):
         self.viewport = gtk.Viewport()
         self.scroll.add(self.viewport)
 
-        text = os.popen('nordvpn countries')#.readlines()
+        text = os.popen('nordvpn countries')
         countries = reg(text)
 
         # boxes
@@ -528,9 +524,8 @@ class Browser(Gtk.Window):
 
             self.box.pack_start(box, True, True, 0)
 
-
     def combo_connecting(self, combo):
-        iter = combo.get_active_iter() #iter is a TreeIter object
+        iter = combo.get_active_iter()  # iter is a TreeIter object
         if iter is not None:
             model = combo.get_model()
             place = model[iter][0]
@@ -546,11 +541,14 @@ class Browser(Gtk.Window):
 class PopUpAbout(Gtk.AboutDialog):
 
     def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "About Nord Manager", parent, Gtk.DialogFlags.MODAL)
-        #self.set_size_request(300,400)
+        Gtk.Dialog.__init__(
+            self, "About Nord Manager", parent, Gtk.DialogFlags.MODAL)
+        # self.set_size_request(300,400)
         self.set_comments("Non official Nord VPN Manager GUI")
-        self.set_logo(GdkPixbuf.Pixbuf.new_from_file("/opt/NordManager/Peigne-plume-256-320.png"))
-        self.set_copyright("Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
+        self.set_logo(
+            GdkPixbuf.Pixbuf.new_from_file(os.path.join(BASE_DIR, "Peigne-plume-256-320.png")))
+        self.set_copyright(
+            "Copyright 2019 Fabre Vincent <peigne.plume@gmail.com>")
         self.set_version(__version__)
         self.set_authors(["Vincent Fabre, <peigne.plume@gmail.com>"])
         self.set_license_type(Gtk.License.BSD)
@@ -558,6 +556,7 @@ class PopUpAbout(Gtk.AboutDialog):
         self.set_license(license_BSD)
 
         self.show_all()
+
 
 indic = Indicator()
 signal.signal(signal.SIGINT, signal.SIG_DFL)

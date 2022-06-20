@@ -1,0 +1,171 @@
+#! /usr/bin/env python3
+# coding: utf-8
+
+"""
+This fast installer is destined to the developpers who want to create
+their own quick installer, in the 'geninstaller' way.
+Just read the comments and complete the informations asked below,
+the magic will do the rest.
+
+IMPORTANT:
+Geninstaller only installs applications in the user's space, it does not
+access to the system files. Therefore, each installation is relative
+to one user of the computer. It is possible to install the application
+on multiple sessions, but each application installed will remain totally
+independent.
+
+"""
+
+import os
+import sys
+
+# ============ DO NOT TOUCH THIS DEPENDENCIES CHECK ============
+
+# dependencies check
+version = sys.version_info  # user's python version
+this_file = os.path.basename(__file__)
+
+
+def check_pip(test=False):
+    """Checks if pip is installed, if it is not,
+    closes the program with a message"""
+    res = os.popen(f"python{version[0]}.{version[1]} -m pip -V").read().strip()
+    OK = False
+    if res.startswith('pip'):
+        OK = True
+    if not OK or test:
+        this_file = os.path.basename(__file__)
+        print(
+            "\x1b[0;30;33m"  # text is yellow
+            "pip is not installed for your main version of python3.\n"
+            "\x1b[0m"
+            "Please install pip first (see below)"
+            ", and then, restart your session "
+            f"before executing './{this_file}' again.\n\n"
+            "   INSTALLING pip:\n"
+            "- DEBIAN (Ubuntu, Linux Mint, etc...):\n"
+            "sudo apt install python3-pip\n"
+            "- Fedora, CentOS/RHEL 7+:\n"
+            "sudo yum install python3-pip\n"
+            "- ARCH LINUX, Manjaro:\n"
+            "sudo pacman -S python-pip\n"
+            "- OPENSUSE:\n"
+            "sudo zypper install python3-pip\n"
+            "\n"
+            "Or, for any distribution:\n"
+            "wget https://bootstrap.pypa.io/get-pip.py\n"
+            "chmod +x get-pip.py\n"
+            "sudo python3 get-pip.py\n"
+            )
+        exit()
+check_pip()
+import pkg_resources
+
+dependencies = [
+    'geninstaller>=1.0.8',
+]
+try:
+    pkg_resources.require(dependencies)
+except pkg_resources.DistributionNotFound:
+    os.system(
+        f"python{version[0]}.{version[1]} "
+        "-m pip install --upgrade geninstaller")
+    print(
+        "\x1b[0;30;32m"  # text is green
+        "Dependencies successfully installed, "
+        f"please, execute '{this_file}' again"
+        "\x1b[0m"
+        )
+    exit()
+
+from flamewok.cli import cli
+
+# =========== THERE WE GO ===================================
+
+# PLACE THIS FILE IN THE ROOT DIRECTORY OF YOUR PROJECT
+
+# =====================================================================
+# ======= Complete this informations ==================================
+
+# choose a good name, do NOT use underscores here
+NAME = "Nord Manager"
+# short description (optionnal), a few words would be fine
+DESCRIPTION = "Unoficial NordVPN manager in the system tray"
+# The main executable file of the application
+# The path is relative to this directory (BASE_DIR defined below)
+EXECUTABLE = "app/nordmanager.py"
+# The icon that your system will use (optionnal, but so much better)
+# The path is relative to this directory (BASE_DIR defined below)
+ICON = "app/icon_nordvpn.png"
+# Does your application needs to appear within a terminal ?
+# (usually, a graphical application doesn't need a terminal)
+TERMINAL = False
+
+# uncomment the categories in which you want your app to appear in (optionnal).
+# if needed, read this:
+# freedesktop.org doc for categories
+# https://specifications.freedesktop.org/menu-spec/latest/apa.html#main-category-registry
+# additionnal categories
+# https://specifications.freedesktop.org/menu-spec/latest/apas02.html
+CATEGORIES = [
+    # "AudioVideo",
+    # "Audio",
+    # "Video",
+    # "Development",
+    # "Education",
+    # "Game",
+    # "Graphics",
+    "Network",
+    # "Office",
+    # "Science",
+    # "Settings",
+    # "System",
+    "Utility",
+]
+
+# you're done ! :)
+
+# = do not touch what is following unless you know what you're doing ==
+# =====================================================================
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+datas = {
+    "name": NAME,
+    "exec": EXECUTABLE,
+    "comment": DESCRIPTION,
+    "terminal": TERMINAL,
+    "icon": ICON,
+    "categories": CATEGORIES,
+    "base_dir": BASE_DIR,
+}
+
+
+def install():
+    """installs geninstaller's database on the system,
+     if not already installed. Absolutely required !"""
+    from geninstaller.helpers import autoinstall
+    from geninstaller import core
+    autoinstall()
+    # and then installs your application
+    core.install(datas)
+
+
+def main():
+
+    routes = [
+        f"installer program for: {NAME}",
+        "INSTALLATION",
+        ("", install, (
+            f"Install '{NAME}' by simply executing '$ ./{this_file}'"
+            )),
+
+        "HELP",
+        ("-h", cli.help, "\n|    display this help"),
+        ("--help", cli.help, "\n|    display this help"),
+    ]
+    cli.route(*routes)
+
+
+if __name__ == "__main__":
+    main()

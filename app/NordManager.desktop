@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Nord Manager
-Comment=Launches a manager for NordVPN in a system tray icon.
-Keywords=vpn VPN nordvpn nord
-Exec=nordmanager.sh
-Icon=/usr/share/pixmaps/icon_nordvpn.png
-Terminal=false
-Type=Application
-Categories=Utility;Network;

@@ -1,46 +1,40 @@
-# Nord Manager (Linux GUI for nordvpn)
 
 
+![nordvpn](https://lh3.googleusercontent.com/fYdbiwmBnCVn27ZUaGez84Q_F1F59cHpD3La-KpJmmhj9uAvtQaes72cbBTIt2n8gVjJAz0cEx5yAhM6H5Ou8D_T=w128-h128-e365-rj-sc0x00ffffff)
 
-- What is it :
+# Nord Manager
 
-This is a complete Nord VPN unoffical GUI for Linux, it also offers
-a security option to close the transmission app if the vpn is
+_Non official NordVPN GUI for linux_
+
+
+Very light weight application, simple and fast GUI.
+A security option the closes the transmission app if the vpn is
 disconnected.
 
-As it is a very light weight application, I suggest you set it to be
-launched automaticly when the system starts, or not, works fine with
-a shortcut too.
+### Version 2.0.0 (with the 'geninstaller' installer)
+The only difference with the 1.5.0 is the installer. This new one will install by himself a few dependencies, but is cleaner, and should work fine with any linux distro, not only Ubuntu.
+Feel free to e-mail me some feedback please (peigne.plume-at-gmail.com).
+([informations about geninstaller here](https://github.com/byoso/geninstaller))
 
-### Version 1.5.0
+### Version 1.5.0 (with no 'geninstaller' installer)
 Fix the bug caused by Nordvpn's add "New Feature ..."
 
-## INSTALLATION
+[version 1.5.0 is available here](https://github.com/byoso/Nord-Manager/tree/master_1.5.0)
+
+## INSTALLATION (Now on any linux distro)
 
 (be sure you have the official nordvpn installed first).
 
-### DEBIAN, UBUNTU, MINT... :
-
-- To install :
-```bash
-./install.sh
+Install:
 ```
-enter your admin code, and then it works.
-
-- To uninstall :
-```bash
-./uninstall.sh
+./installer
 ```
-and that's all !
+(then follow the instructions)
 
-
-### NON DEBIAN BASED OS:
-You will have to edit the install.sh to change the "apt" command
-to your own package manager command.
-GTK in also a required dependency.
-If you still got an issue, please leave a post on github here:
-https://github.com/byoso/Nord-Manager/issues
-
+Uninstall:
+```
+geninstaller uninstall 'Nord Manager'
+```
 
 ## Main functionalities :
 
@@ -60,14 +54,9 @@ will be executed when clicked, but the console will not be shown.
 
 - In the **directory**
 ```
-~/.local/share/NordManager
+~/.local/share/applications-files/Nord_Manager
 ```
-you will find a file
-named "data.json", it contains the settings of the app.
-
-Change it to the command adapted to your own needs.
-don't forget to RTFM : man nordvpn
-;)
+you will find the installed files.
 
 - **info_command** : the bash command to get the status of the vpn. For
 nord VPN it is "nordvpn status"
