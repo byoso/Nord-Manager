@@ -61,22 +61,28 @@ def check_pip(test=False):
 check_pip()
 import pkg_resources
 
-dependencies = [
-    'geninstaller>=1.0.8',
-]
-try:
-    pkg_resources.require(dependencies)
-except pkg_resources.DistributionNotFound:
+
+def pip_install_dependencies():
     os.system(
         f"python{version[0]}.{version[1]} "
         "-m pip install --upgrade geninstaller")
     print(
         "\x1b[0;30;32m"  # text is green
-        "Dependencies successfully installed, "
-        f"please, execute '{this_file}' again"
+        "Dependencies successfully installed."
         "\x1b[0m"
         )
-    exit()
+
+
+dependencies = [
+    'geninstaller>=1.1.0',
+]
+try:
+    pkg_resources.require(dependencies)
+except pkg_resources.VersionConflict:  # python3.7/3.8
+    pip_install_dependencies()
+except pkg_resources.DistributionNotFound:  # python3.6/3.9
+    pip_install_dependencies()
+
 
 from flamewok.cli import cli
 

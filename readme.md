@@ -11,7 +11,7 @@ Very light weight application, simple and fast GUI.
 A security option the closes the transmission app if the vpn is
 disconnected.
 
-### Version 2.0.0 (with the 'geninstaller' installer)
+### Version 2.x.x (with the 'geninstaller' installer)
 The only difference with the 1.5.0 is the installer. This new one will install by himself a few dependencies, but is cleaner, and should work fine with any linux distro, not only Ubuntu.
 Feel free to e-mail me some feedback please (peigne.plume-at-gmail.com).
 ([informations about geninstaller here](https://github.com/byoso/geninstaller))
