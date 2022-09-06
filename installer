@@ -3,7 +3,7 @@
 
 """
 This fast installer is destined to the developpers who want to create
-their own quick installer, in the 'geninstaller' way.
+their own quick installer, with 'geninstaller'.
 Just read the comments and complete the informations asked below,
 the magic will do the rest.
 
@@ -16,76 +16,6 @@ independent.
 
 """
 
-import os
-import sys
-
-# ============ DO NOT TOUCH THIS DEPENDENCIES CHECK ============
-
-# dependencies check
-version = sys.version_info  # user's python version
-this_file = os.path.basename(__file__)
-
-
-def check_pip(test=False):
-    """Checks if pip is installed, if it is not,
-    closes the program with a message"""
-    res = os.popen(f"python{version[0]}.{version[1]} -m pip -V").read().strip()
-    OK = False
-    if res.startswith('pip'):
-        OK = True
-    if not OK or test:
-        this_file = os.path.basename(__file__)
-        print(
-            "\x1b[0;30;33m"  # text is yellow
-            "pip is not installed for your main version of python3.\n"
-            "\x1b[0m"
-            "Please install pip first (see below)"
-            ", and then, restart your session "
-            f"before executing './{this_file}' again.\n\n"
-            "   INSTALLING pip:\n"
-            "- DEBIAN (Ubuntu, Linux Mint, etc...):\n"
-            "sudo apt install python3-pip\n"
-            "- Fedora, CentOS/RHEL 7+:\n"
-            "sudo yum install python3-pip\n"
-            "- ARCH LINUX, Manjaro:\n"
-            "sudo pacman -S python-pip\n"
-            "- OPENSUSE:\n"
-            "sudo zypper install python3-pip\n"
-            "\n"
-            "Or, for any distribution:\n"
-            "wget https://bootstrap.pypa.io/get-pip.py\n"
-            "chmod +x get-pip.py\n"
-            "sudo python3 get-pip.py\n"
-            )
-        exit()
-check_pip()
-import pkg_resources
-
-
-def pip_install_dependencies():
-    os.system(
-        f"python{version[0]}.{version[1]} "
-        "-m pip install --upgrade geninstaller")
-    print(
-        "\x1b[0;30;32m"  # text is green
-        "Dependencies successfully installed."
-        "\x1b[0m"
-        )
-
-
-dependencies = [
-    'geninstaller>=1.1.0',
-]
-try:
-    pkg_resources.require(dependencies)
-except pkg_resources.VersionConflict:  # python3.7/3.8
-    pip_install_dependencies()
-except pkg_resources.DistributionNotFound:  # python3.6/3.9
-    pip_install_dependencies()
-
-
-from flamewok.cli import cli
-
 # =========== THERE WE GO ===================================
 
 # PLACE THIS FILE IN THE ROOT DIRECTORY OF YOUR PROJECT
@@ -96,7 +26,7 @@ from flamewok.cli import cli
 # choose a good name, do NOT use underscores here
 NAME = "Nord Manager"
 # short description (optionnal), a few words would be fine
-DESCRIPTION = "Unoficial NordVPN manager in the system tray"
+DESCRIPTION = "Unoficial NordVPN manager in the system tray (geninstaller)"
 # The main executable file of the application
 # The path is relative to this directory (BASE_DIR defined below)
 EXECUTABLE = "app/nordmanager.py"
@@ -129,10 +59,96 @@ CATEGORIES = [
     "Utility",
 ]
 
+# ADDITIONAL OPTIONS
+exec_options = ""  # if the exec needs additional options
+
+# if more parameters are needed in the .desktop file, fill this list
+# with the lines you want. e.g: ["foo=bar", "truc=machin"]
+options = [
+]
+
+# you can add your own PyPI dependencies here if you want:
+dependencies = [
+    'geninstaller>=1.1.2',  # do not remove this line.
+]
+
 # you're done ! :)
 
 # = do not touch what is following unless you know what you're doing ==
 # =====================================================================
+
+
+import os
+import sys
+import pkg_resources
+
+
+# dependencies check
+version = sys.version_info  # user's python version
+this_file = os.path.basename(__file__)
+
+
+def check_pip(test=False):
+    """Checks if pip is installed, if it is not,
+    closes the program with a message"""
+    res = os.popen(f"python{version[0]}.{version[1]} -m pip -V").read().strip()
+    OK = False
+    if res.startswith('pip'):
+        OK = True
+    if not OK or test:
+        this_file = os.path.basename(__file__)
+        message = (
+            "pip is not installed for your main version of python3.\n"
+            "Please install pip first (see below)"
+            ", and then, restart your session "
+            f"before executing './{this_file}' again.\n\n"
+            "   INSTALLING pip:\n"
+            "- DEBIAN (Ubuntu, Linux Mint, etc...):\n"
+            "$ sudo apt install python3-pip\n"
+            "- Fedora, CentOS/RHEL 7+:\n"
+            "$ sudo yum install python3-pip\n"
+            "- ARCH LINUX, Manjaro:\n"
+            "$ sudo pacman -S python-pip\n"
+            "- OPENSUSE:\n"
+            "$ sudo zypper install python3-pip\n"
+            "\n"
+            "Or, for any distribution:\n"
+            "$ wget https://bootstrap.pypa.io/get-pip.py\n"
+            "$ chmod +x get-pip.py\n"
+            "$ sudo python3 get-pip.py\n"
+        )
+        print("\x1b[0;30;33m" + "ABORTED !\n" + "\x1b[0m")
+        print(message)
+        to_send = f"\"Installation Aborted !!\" \"{message}\""
+        os.system(f"notify-send {to_send}")
+        exit()
+
+
+check_pip()
+
+
+def pip_install_dependencies():
+    for dependency in dependencies:
+        dependency = dependency.replace(">", "=").split('=')[0]
+        os.system(
+            f"python{version[0]}.{version[1]} "
+            f"-m pip install --upgrade {dependency}")
+    print(
+        "\x1b[0;30;32m"  # text is green
+        "Dependencies successfully installed."
+        "\x1b[0m"
+        )
+
+
+try:
+    pkg_resources.require(dependencies)
+except pkg_resources.VersionConflict:  # python3.7/3.8
+    pip_install_dependencies()
+except pkg_resources.DistributionNotFound:  # python3.6/3.9
+    pip_install_dependencies()
+
+
+from flamewok.cli import cli
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -144,6 +160,8 @@ datas = {
     "icon": ICON,
     "categories": CATEGORIES,
     "base_dir": BASE_DIR,
+    "exec_options": exec_options,
+    "options": options,
 }
 
 
@@ -153,7 +171,7 @@ def install():
     from geninstaller.helpers import autoinstall
     from geninstaller import core
     autoinstall()
-    # and then installs your application
+    # and then, installs your application
     core.install(datas)
 
 
@@ -167,8 +185,7 @@ def main():
             )),
 
         "HELP",
-        ("-h", cli.help, "\n|    display this help"),
-        ("--help", cli.help, "\n|    display this help"),
+        (["-h", "--help"], cli.help, "display this help"),
     ]
     cli.route(*routes)
 
