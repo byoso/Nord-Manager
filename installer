@@ -26,7 +26,7 @@ independent.
 # choose a good name, do NOT use underscores here
 NAME = "Nord Manager"
 # short description (optionnal), a few words would be fine
-DESCRIPTION = "Unoficial NordVPN manager in the system tray (geninstaller)"
+DESCRIPTION = "Unoficial NordVPN manager in the system tray"
 # The main executable file of the application
 # The path is relative to this directory (BASE_DIR defined below)
 EXECUTABLE = "app/nordmanager.py"
@@ -65,6 +65,7 @@ exec_options = ""  # if the exec needs additional options
 # if more parameters are needed in the .desktop file, fill this list
 # with the lines you want. e.g: ["foo=bar", "truc=machin"]
 options = [
+    "Keywords=geninstaller;",
 ]
 
 # you can add your own PyPI dependencies here if you want:
