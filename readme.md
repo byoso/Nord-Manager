@@ -18,13 +18,14 @@ $ sudo apt install gir1.2-appindicator3-0.1
 
 Then:
 
-(be sure you have the official nordvpn installed first).
+- be sure you have the official nordvpn installed first.
 
-Install:
+- Install:
 ```bash
 $ ./installer
 ```
-(then follow the instructions)
+Then follow the instructions
+- if the installer asks you to install pip, do not forget to reboot after installing pip, before running the installer again.
 
 Uninstall:
 ```bash
@@ -33,10 +34,10 @@ $ geninstaller uninstall 'Nord Manager'
 
 ## Main functionalities :
 
--Browse... : opens a window showing all the available servers, you just
+- **Browse...** : opens a window showing all the available servers, you just
 have to pick the one you want, fast and easy.
 
-- 6 shortcuts buttons : this buttons are already set with default values,
+- **6 shortcuts buttons** : this buttons are already set with default values,
 but are expected to be customized to your own needs,
 you can set them in the settings window. Each button is defined by 2 fileds,
 the first is the name you want for your button, the second is the bash
