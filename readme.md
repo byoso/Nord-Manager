@@ -72,4 +72,5 @@ killall transmission-gtk; killall amule;
 You can simply
 deactivate it by commenting the line ("#" at the begining)
 
-
+### Changelog:
+- 2.0.2 : Autodetect if not logged in, then redirect to the connection web page.

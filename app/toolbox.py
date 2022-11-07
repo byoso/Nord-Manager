@@ -2,6 +2,8 @@
 # -*- coding : utf-8 -*-
 
 import re
+import os
+import json
 
 license_BSD = """Copyright 2019-2022 Fabre Vincent <peigne.plume@gmail.com>
 
@@ -13,6 +15,9 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
 
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+data_file = os.path.join(BASE_DIR, "data.json")
 
 def tri(text):
     list_out = []
@@ -45,3 +50,30 @@ def reg(text):
 def menu_builder(text):
     for i in reg(text):
         print(i)
+
+
+def record_data(data):
+    with open(data_file, 'w') as file:
+        json.dump(data, file)
+
+
+def load_data():
+    with open(data_file, 'r') as file:
+        data = json.load(file)
+    return data
+
+
+def connection(place):
+    command = "nordvpn c {}".format(place.lower())
+    shortcut_connection(command)
+
+
+def shortcut_connection(command):
+    answer = os.popen(command).readlines()
+    data = load_data()
+    for text in answer:
+        if data['not_logged_in'] in text:
+            os.system("notify-send  'Nord Manager' 'You are not logged in'")
+            answer = [text for text in os.popen("nordvpn login").readlines() if "browser" in text.lower()]
+            url = answer[0].split(" ")[-1]
+            os.system(f"xdg-open '{url}'")

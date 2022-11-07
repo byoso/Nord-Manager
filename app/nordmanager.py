@@ -1,44 +1,38 @@
 #!/usr/bin/env python3
+
 import signal
+import re
 import gi
 import os
 import time
 import json
+from threading import Thread
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk as gtk
 from gi.repository import Gtk, AppIndicator3, GdkPixbuf
-from threading import Thread
-from toolbox import reg, license_BSD
-import re
 
-__version__ = "2.0.1"
+from toolbox import (
+    reg,
+    license_BSD,
+    load_data,
+    record_data,
+    BASE_DIR,
+    shortcut_connection,
+)
+from browser import Browser
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+__version__ = "2.0.2"
 
-#========== Some globaly used functions ===========
 
 text = os.popen('nordvpn countries')
 countries = reg(text)
 for i in countries:
     print(i)
-data_file = os.path.join(BASE_DIR, "data.json")
-
-
-def record_data(data):
-    with open(data_file, 'w') as file:
-        json.dump(data, file)
-
-
-def load_data():
-    with open(data_file, 'r') as file:
-        data = json.load(file)
-    return data
 
 
 data = load_data()
-
-# ================= Classes used ==================
 
 
 class Indicator():
@@ -127,33 +121,32 @@ class Indicator():
         Gtk.main_quit()
 
     def connect_browse(self, source):
-        print('======Browser')
         window = Browser()
         window.show_all()
 
     def connect_item1(self, source):
         commande = data["it1c"]
-        os.system(commande)
+        shortcut_connection(commande)
 
     def connect_item2(self, source):
         commande = data["it2c"]
-        os.system(commande)
+        shortcut_connection(commande)
 
     def connect_item3(self, source):
         commande = data["it3c"]
-        os.system(commande)
+        shortcut_connection(commande)
 
     def connect_item4(self, source):
         commande = data["it4c"]
-        os.system(commande)
+        shortcut_connection(commande)
 
     def connect_item5(self, source):
         commande = data["it5c"]
-        os.system(commande)
+        shortcut_connection(commande)
 
     def connect_item6(self, source):
         commande = data["it6c"]
-        os.system(commande)
+        shortcut_connection(commande)
 
     def connect_stop(self, source):
         os.system("nordvpn d")
@@ -430,6 +423,7 @@ class Settings(Gtk.Window):
                 data["timing"] = self.timing.get_value()
                 data["green_word"] = self.green_word.get_text()
                 data["info_command"] = self.info_command.get_text()
+                data["not_logged_in"] = "not logged in"
                 record_data(data)
                 os.system("notify-send 'Nord Manager: settings saved'")
             else:
@@ -458,84 +452,6 @@ class Settings(Gtk.Window):
         self.green_word.set_text(default_data["green_word"])
         self.info_command.set_text(default_data["info_command"])
 
-
-class Browser(Gtk.Window):
-    def __init__(self):
-        Gtk.Window.__init__(self, title="Nord Manager browser")
-        # headerbar
-        self.header_bar = gtk.HeaderBar()
-        self.header_bar.set_show_close_button(True)
-        self.header_bar.set_title("Nord Manager browser")
-        self.header_bar.set_subtitle('Choose a country or a city')
-        self.set_titlebar(self.header_bar)
-        # spinner
-        self.spinner = gtk.Spinner.new()
-        self.header_bar.pack_end(self.spinner)
-        self.spinner.start()
-
-        # set the window
-        self.set_properties(border_width=10)
-        self.set_default_size(400, 500)
-        self.set_size_request(300, 200)
-
-        # scrolling window
-        self.scroll = gtk.ScrolledWindow()
-        self.add(self.scroll)
-        self.viewport = gtk.Viewport()
-        self.scroll.add(self.viewport)
-
-        text = os.popen('nordvpn countries')
-        countries = reg(text)
-
-        # boxes
-        self.box = gtk.VBox()
-        self.viewport.add(self.box)
-
-        for country in countries:
-            box = Gtk.HBox()
-            # gbox = Gtk.Grid()
-            button = Gtk.Button(country)
-            print(country)#debug
-            # os.system("notify-send 'country : {}'".format(country))#debug
-            cities = reg(os.popen("nordvpn cities {}".format(country)))
-            print(cities)#debug
-            store = Gtk.ListStore(str)
-
-            if len(cities) > 1:
-                store.append(['-- Cities --'])
-                for city in cities:
-                    store.append([city])
-                button2 = Gtk.ComboBox.new_with_model(store)
-                # button2.set_title("-- Cities --")
-                renderer_text = Gtk.CellRendererText()
-                button2.pack_start(renderer_text, True)
-                button2.add_attribute(renderer_text, "text", 0)
-                button2.set_active(0)
-                button2.connect("changed", self.combo_connecting)
-
-            else:
-                button2 = Gtk.Button(cities[0])
-                button2.connect("clicked", self.connecting, cities[0])
-
-            box.pack_start(button, False, True, 10)
-
-            button.connect('clicked', self.connecting, country)
-            box.pack_end(button2, False, False, 10)
-
-            self.box.pack_start(box, True, True, 0)
-
-    def combo_connecting(self, combo):
-        iter = combo.get_active_iter()  # iter is a TreeIter object
-        if iter is not None:
-            model = combo.get_model()
-            place = model[iter][0]
-            if place != '-- Cities --':
-                self.connecting(self, place)
-
-    def connecting(self, source, place):
-        command = "nordvpn c {}".format(place.lower())
-        os.system(command)
-        self.close()
 
 
 class PopUpAbout(Gtk.AboutDialog):
