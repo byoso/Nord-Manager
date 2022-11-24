@@ -9,6 +9,8 @@ Very light weight application, simple and fast GUI.
 A security option the closes the transmission app if the vpn is
 disconnected.
 
+ :coffee: [**You can buy me a coffee if you're in the mood ;)**](https://www.buymeacoffee.com/byoso)
+
 ## INSTALLATION (on any linux distro)
 
 For **Ubuntu** (vanilla), you need to install this first :
@@ -72,5 +74,7 @@ killall transmission-gtk; killall amule;
 You can simply
 deactivate it by commenting the line ("#" at the begining)
 
+
 ### Changelog:
 - 2.0.2 : Autodetect if not logged in, then redirect to the connection web page.
+
