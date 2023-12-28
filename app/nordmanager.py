@@ -334,7 +334,8 @@ class Settings(Gtk.Window):
         lbox.pack_start(self.emergency_entry, False, False, 10)
 
         # Save settings button
-        save_button = Gtk.Button.new_from_stock(Gtk.STOCK_SAVE)
+        save_button = Gtk.Button.new_from_icon_name(Gtk.STOCK_SAVE, 1)
+        save_button.set_label("Save settings")
         save_button.set_always_show_image(True)
         save_button.connect('clicked', self.save_data)
         lbox.pack_end(save_button, False, False, 10)
@@ -378,7 +379,8 @@ class Settings(Gtk.Window):
         rbox.pack_end(default_button, False, False, 10)
 
         # about
-        about_button = Gtk.Button.new_from_stock(Gtk.STOCK_ABOUT)
+        about_button = Gtk.Button.new_from_icon_name(Gtk.STOCK_ABOUT, 1)
+        about_button.set_label("About")
         about_button.set_always_show_image(True)
         about_button.connect('clicked', self.about)
         rbox.pack_end(about_button, False, False, 10)
