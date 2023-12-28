@@ -19,11 +19,12 @@ from config import (
 
 class Browser(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title="Nord Manager browser")
+        super().__init__(title="Nord Manager browser")
         # icon
         icon_file = os.path.abspath(
             os.path.join(BASE_DIR, "icon_nordvpn_green.png"))
         self.set_default_icon_from_file(icon_file)
+        self.set_position(Gtk.WindowPosition.CENTER)
         # headerbar
         self.header_bar = Gtk.HeaderBar()
         self.header_bar.set_show_close_button(True)
@@ -36,9 +37,7 @@ class Browser(Gtk.Window):
         self.spinner.start()
 
         # set the window
-        self.set_properties(border_width=10)
-        self.set_default_size(400, 500)
-        self.set_size_request(300, 200)
+        self.set_size_request(600, 600)
 
         # scrolling window
         self.scroll = Gtk.ScrolledWindow()
@@ -79,12 +78,16 @@ class Browser(Gtk.Window):
                 button2 = Gtk.Button(cities[0])
                 button2.connect("clicked", self.connecting, cities[0])
 
-            box.pack_start(button, True, True, 5)
-
             button.connect('clicked', self.connecting, country)
-            box.pack_end(button2, True, True, 5)
 
-            self.box.pack_start(box, False, False, 0)
+            grid = Gtk.Grid()
+            grid.set_column_spacing(10)
+            grid.attach(button, 0, countries.index(country), 30, 1)
+            grid.attach(button2, 31, countries.index(country), 20, 1)
+
+            self.box.add(grid)
+
+            # self.box.pack_start(box, False, False, 0)
 
     def combo_connecting(self, combo):
         iter = combo.get_active_iter()  # iter is a TreeIter object
