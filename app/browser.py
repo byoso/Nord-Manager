@@ -79,12 +79,12 @@ class Browser(Gtk.Window):
                 button2 = Gtk.Button(cities[0])
                 button2.connect("clicked", self.connecting, cities[0])
 
-            box.pack_start(button, False, True, 10)
+            box.pack_start(button, True, True, 5)
 
             button.connect('clicked', self.connecting, country)
-            box.pack_end(button2, False, False, 10)
+            box.pack_end(button2, True, True, 5)
 
-            self.box.pack_start(box, True, True, 0)
+            self.box.pack_start(box, False, False, 0)
 
     def combo_connecting(self, combo):
         iter = combo.get_active_iter()  # iter is a TreeIter object
