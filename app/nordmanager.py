@@ -11,7 +11,11 @@ from threading import Thread
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk as gtk
-from gi.repository import Gtk, AppIndicator3, GdkPixbuf
+from gi.repository import (
+    Gtk,
+    AppIndicator3,
+    GdkPixbuf
+    )
 
 from toolbox import (
     reg,
@@ -35,7 +39,7 @@ for i in countries:
 data = load_data()
 
 
-class Indicator():
+class IndicatorApp():
     def __init__(self):
         self.timing = int(data["timing"])
         print("timing:" + str(self.timing))  # debug
@@ -474,6 +478,6 @@ class PopUpAbout(Gtk.AboutDialog):
         self.show_all()
 
 
-indic = Indicator()
+IndicatorApp()
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 Gtk.main()
