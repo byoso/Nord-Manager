@@ -3,20 +3,31 @@ import gi
 import os
 
 gi.require_version('Gtk', '3.0')
-
 from gi.repository import Gtk
 
-from toolbox import reg, load_data, connection
+from toolbox import (
+    connection,
+    debug_print,
+    get_countries,
+    )
 
+from config import (
+    BASE_DIR,
+    __version__,
+    )
 
 
 class Browser(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Nord Manager browser")
+        # icon
+        icon_file = os.path.abspath(
+            os.path.join(BASE_DIR, "icon_nordvpn_green.png"))
+        self.set_default_icon_from_file(icon_file)
         # headerbar
         self.header_bar = Gtk.HeaderBar()
         self.header_bar.set_show_close_button(True)
-        self.header_bar.set_title("Nord Manager browser")
+        self.header_bar.set_title("Nord Manager browser ({})".format(__version__))
         self.header_bar.set_subtitle('Choose a country or a city')
         self.set_titlebar(self.header_bar)
         # spinner
@@ -35,8 +46,8 @@ class Browser(Gtk.Window):
         self.viewport = Gtk.Viewport()
         self.scroll.add(self.viewport)
 
-        text = os.popen('nordvpn countries')
-        countries = reg(text)
+        # get countries
+        countries = get_countries()
 
         # boxes
         self.box = Gtk.VBox()
@@ -45,11 +56,11 @@ class Browser(Gtk.Window):
         for country in countries:
             box = Gtk.HBox()
             # gbox = Gtk.Grid()
-            button = Gtk.Button(country)
-            print(country)#debug
-            # os.system("notify-send 'country : {}'".format(country))#debug
-            cities = reg(os.popen("nordvpn cities {}".format(country)))
-            print(cities)#debug
+            button = Gtk.Button(country['name'])
+            debug_print(country['name'])
+            # cities = reg(os.popen("nordvpn cities {}".format(country)))
+            cities = country['cities']
+            debug_print(cities)
             store = Gtk.ListStore(str)
 
             if len(cities) > 1:
@@ -82,7 +93,6 @@ class Browser(Gtk.Window):
             place = model[iter][0]
             if place != '-- Cities --':
                 self.connecting(self, place)
-
 
     def connecting(self, source, place):
         connection(place)

@@ -13,16 +13,19 @@ disconnected.
 
 ## INSTALLATION (on any linux distro)
 
-For **Ubuntu** (vanilla), you need to install this first :
+Now Nord Manager uses ayatana appindicator for better compatibility. It is supposed to be included in most of the recent major distros,
+but depending on the system you are you running, this dependencie may be missing. You can install it this way:
+
+**Example for Ubuntu**:
 ```bash
-$ sudo apt install gir1.2-appindicator3-0.1
+$ sudo apt install gir1.2-ayatanaappindicator3-0.1
 ```
 
 Then:
 
 - be sure you have the official nordvpn installed first.
 
-- Install:
+- So you can install nord manager:
 ```bash
 $ ./installer
 ```
@@ -76,5 +79,5 @@ deactivate it by commenting the line ("#" at the begining)
 
 
 ### Changelog:
+- 2.1.0: use of nord vpn's api instead of "scrapping" the terminal to get the countries and cities (more reliable)
 - 2.0.2 : Autodetect if not logged in, then redirect to the connection web page.
-

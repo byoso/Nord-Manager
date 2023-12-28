@@ -4,6 +4,10 @@
 import re
 import os
 import json
+import requests
+from pprint import pprint
+
+from config import DEBUG, NVPN_URL
 
 license_BSD = """Copyright 2019-2022 Fabre Vincent <peigne.plume@gmail.com>
 
@@ -18,6 +22,27 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 data_file = os.path.join(BASE_DIR, "data.json")
+
+
+def get_countries():
+    """Get contries and cities from NordVPN API"""
+    payload = {}
+    headers = {}
+
+    response = requests.request("GET", NVPN_URL, headers=headers, data=payload)
+    datas = json.loads(response.text)
+    countries = []
+    for elem in datas:
+        country = {}
+        country['name'] = elem['name']
+        country['cities'] = []
+
+        for city in elem['cities']:
+            country['cities'].append(city['name'])
+
+        countries.append(country)
+    return countries
+
 
 def tri(text):
     list_out = []
@@ -77,3 +102,8 @@ def shortcut_connection(command):
             answer = [text for text in os.popen("nordvpn login").readlines() if "browser" in text.lower()]
             url = answer[0].split(" ")[-1]
             os.system(f"xdg-open '{url}'")
+
+
+def debug_print(text):
+    if DEBUG:
+        print(text)
