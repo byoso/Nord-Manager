@@ -2,7 +2,7 @@ import os
 
 __version__ = "2.1.2"
 
-DEBUG = True
+DEBUG = False
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Nord VPN api url
