@@ -25,7 +25,7 @@ data_file = os.path.join(BASE_DIR, "data.json")
 
 
 def get_countries():
-    """Get contries and cities from NordVPN API"""
+    """Get contries and cities from NordVPN's API"""
     payload = {}
     headers = {}
 

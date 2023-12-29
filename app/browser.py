@@ -76,9 +76,9 @@ class Browser(Gtk.Window):
 
             else:
                 button2 = Gtk.Button(cities[0])
-                button2.connect("clicked", self.connecting, cities[0])
+                button2.connect("clicked", self.connecting, cities[0].lower().replace(" ", "_"))
 
-            button.connect('clicked', self.connecting, country)
+            button.connect('clicked', self.connecting, country['name'].lower().replace(" ", "_"))
 
             grid = Gtk.Grid()
             grid.set_column_spacing(10)
@@ -95,8 +95,9 @@ class Browser(Gtk.Window):
             model = combo.get_model()
             place = model[iter][0]
             if place != '-- Cities --':
-                self.connecting(self, place)
+                self.connecting(self, place.lower().replace(" ", "_"))
 
     def connecting(self, source, place):
+        debug_print("=== connecting: " + place)
         connection(place)
         self.close()
