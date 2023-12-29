@@ -200,6 +200,14 @@ class IndicatorApp():
 class Settings(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Nord Manager Settings ({})".format(__version__))
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.do_run = True
+        self.connect("delete-event", self.quit_settings)
+
+        # icon
+        icon_file = os.path.abspath(
+            os.path.join(BASE_DIR, "icon_nordvpn_green.png"))
+        self.set_default_icon_from_file(icon_file)
 
         # Connection informations
         self.info_conn = ""
@@ -389,7 +397,7 @@ class Settings(Gtk.Window):
         rbox.pack_end(about_button, False, False, 10)
 
         # launch processes
-        Thread(target=self.timer).start()
+        Thread(target=self.timer, daemon=True).start()
 
     def timer(self):
         time.sleep(int(data["timing"]))
@@ -404,8 +412,8 @@ class Settings(Gtk.Window):
             if m is not None and "-" not in line:
                 self.info_conn += "{}".format(line)
         self.info.set_label(self.info_conn)
-
-        Thread(target=self.timer).start()
+        if self.do_run:
+            Thread(target=self.timer, daemon=True).start()
 
     def about(self, widget):
         debug_print("about clicked !")
@@ -469,6 +477,9 @@ class Settings(Gtk.Window):
         self.timing.set_value(default_data["timing"])
         self.green_word.set_text(default_data["green_word"])
         self.info_command.set_text(default_data["info_command"])
+
+    def quit_settings(self, *args):
+        self.do_run = False
 
 
 class PopUpAbout(Gtk.AboutDialog):
