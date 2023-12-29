@@ -200,13 +200,16 @@ class IndicatorApp():
 class Settings(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Nord Manager Settings ({})".format(__version__))
-        # init some values
+
+        # Connection informations
         self.info_conn = ""
         reg = os.popen(data["info_command"]).readlines()
         for line in reg:
             m = re.match('([a-zA-Z])', line)
             if m is not None and "-" not in line:
                 self.info_conn += "{}".format(line)
+
+
         # set the window
         self.set_properties(border_width=10)
         self.set_default_size(800, 600)
@@ -235,9 +238,9 @@ class Settings(Gtk.Window):
 
         rbox.pack_start(frame_info, False, False, 10)
 
-        info = Gtk.Label(label=self.info_conn)
-        info.set_selectable(True)
-        frame_info.add(info)
+        self.info = Gtk.Label(label=self.info_conn)
+        self.info.set_selectable(True)
+        frame_info.add(self.info)
 
         # items frame
         it_frame = Gtk.Frame()
@@ -384,6 +387,25 @@ class Settings(Gtk.Window):
         about_button.set_always_show_image(True)
         about_button.connect('clicked', self.about)
         rbox.pack_end(about_button, False, False, 10)
+
+        # launch processes
+        Thread(target=self.timer).start()
+
+    def timer(self):
+        time.sleep(int(data["timing"]))
+        debug_print("settings timer...")
+        self.status()
+
+    def status(self):
+        self.info_conn = ""
+        reg = os.popen(data["info_command"]).readlines()
+        for line in reg:
+            m = re.match('([a-zA-Z])', line)
+            if m is not None and "-" not in line:
+                self.info_conn += "{}".format(line)
+        self.info.set_label(self.info_conn)
+
+        Thread(target=self.timer).start()
 
     def about(self, widget):
         debug_print("about clicked !")

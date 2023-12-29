@@ -94,6 +94,7 @@ def connection(place):
 
 
 def shortcut_connection(command):
+    """Opens the login page in web browser if not logged in with nordvpn"""
     answer = os.popen(command).readlines()
     data = load_data()
     for text in answer:

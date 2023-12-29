@@ -53,8 +53,6 @@ class Browser(Gtk.Window):
         self.viewport.add(self.box)
 
         for country in countries:
-            box = Gtk.HBox()
-            # gbox = Gtk.Grid()
             button = Gtk.Button(country['name'])
             debug_print(country['name'])
             # cities = reg(os.popen("nordvpn cities {}".format(country)))
@@ -86,8 +84,6 @@ class Browser(Gtk.Window):
             grid.attach(button2, 31, countries.index(country), 20, 1)
 
             self.box.add(grid)
-
-            # self.box.pack_start(box, False, False, 0)
 
     def combo_connecting(self, combo):
         iter = combo.get_active_iter()  # iter is a TreeIter object
