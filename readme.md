@@ -79,5 +79,6 @@ deactivate it by commenting the line ("#" at the begining)
 
 
 ### Changelog:
-- 2.1.0: use of nord vpn's api instead of "scrapping" the terminal to get the countries and cities (more reliable)
+- 2.1.3 : Timeout for some actions, so the app wont get stuck anymore if a call do not receive a response fom nord vpn's servers.
+- 2.1.0 : use of nord vpn's api instead of "scrapping" the terminal to get the countries and cities (more reliable)
 - 2.0.2 : Autodetect if not logged in, then redirect to the connection web page.

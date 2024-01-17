@@ -26,7 +26,7 @@ independent.
 # choose a good name, do NOT use underscores here
 NAME = "Nord Manager"
 # short description (optionnal), a few words would be fine
-DESCRIPTION = "Unoficial NordVPN manager in the system tray"
+DESCRIPTION = "Unofficial NordVPN manager in the system tray"
 # The main executable file of the application
 # The path is relative to this directory (BASE_DIR defined below)
 EXECUTABLE = "app/nordmanager.py"
