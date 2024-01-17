@@ -14,6 +14,7 @@
     "it6n": "Ireland",
     "green_word": " connected",
     "timing": 3,
+    "timeout": 5,
     "info_command": "nordvpn status",
     "not_logged_in": "not logged in"
 }

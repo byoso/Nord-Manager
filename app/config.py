@@ -1,6 +1,7 @@
 import os
 
-__version__ = "2.1.2"
+__version__ = "2.1.3"
+
 
 DEBUG = False
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

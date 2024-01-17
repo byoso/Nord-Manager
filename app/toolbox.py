@@ -1,11 +1,14 @@
 #! /usr/bin/env python3
 # -*- coding : utf-8 -*-
 
+import time
+
 import re
 import os
 import json
 import requests
-from pprint import pprint
+import signal
+from contextlib import contextmanager
 
 from config import DEBUG, NVPN_URL
 
@@ -24,13 +27,62 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 data_file = os.path.join(BASE_DIR, "data.json")
 
 
+def record_data(data):
+    with open(data_file, 'w') as file:
+        json.dump(data, file)
+
+
+def load_data():
+    with open(data_file, 'r') as file:
+        data = json.load(file)
+    return data
+
+
+TIMEOUT = load_data()['timeout']
+
+
+def debug_print(text):
+    if DEBUG:
+        print(text)
+
+
+@contextmanager
+def timeout(timer):
+    def raise_timeout(signum, frame):
+        raise TimeoutError
+    # Register a function to raise a TimeoutError on the signal.
+    signal.signal(signal.SIGALRM, raise_timeout)
+    # Schedule the signal to be sent after ``time``.
+    signal.alarm(int(timer))
+
+    try:
+        yield
+    except TimeoutError:
+        pass
+    finally:
+        # Unregister the signal so it won't be triggered
+        # if the timeout is not reached.
+        signal.signal(signal.SIGALRM, signal.SIG_IGN)
+
+
 def get_countries():
     """Get contries and cities from NordVPN's API"""
+
+    TIMEOUT = load_data()['timeout']
     payload = {}
     headers = {}
 
-    response = requests.request("GET", NVPN_URL, headers=headers, data=payload)
-    datas = json.loads(response.text)
+    timed_out = True
+    with timeout(TIMEOUT):
+        # time.sleep(5)
+        response = requests.request("GET", NVPN_URL, headers=headers, data=payload)
+        datas = json.loads(response.text)
+        timed_out = False
+
+    if timed_out:
+        os.system("notify-send 'Nord Manager' 'Connection timed out, check your internet connection and try again'")
+        return []
+
     countries = []
     for elem in datas:
         country = {}
@@ -77,25 +129,23 @@ def menu_builder(text):
         print(i)
 
 
-def record_data(data):
-    with open(data_file, 'w') as file:
-        json.dump(data, file)
-
-
-def load_data():
-    with open(data_file, 'r') as file:
-        data = json.load(file)
-    return data
-
-
 def connection(place):
+    TIMEOUT = load_data()['timeout']
     command = "nordvpn c {}".format(place.lower())
-    shortcut_connection(command)
+    timed_out = True
+    with timeout(TIMEOUT):
+        shortcut_connection(command)
+        timed_out = False
+    if timed_out:
+        os.system("notify-send 'Nord Manager' 'Connection timed out, check your internet connection and try again'")
 
 
 def shortcut_connection(command):
     """Opens the login page in web browser if not logged in with nordvpn"""
+    debug_print("command sent...")
+    # time.sleep(6)
     answer = os.popen(command).readlines()
+    debug_print(answer)
     data = load_data()
     for text in answer:
         if data['not_logged_in'] in text:
@@ -103,8 +153,3 @@ def shortcut_connection(command):
             answer = [text for text in os.popen("nordvpn login").readlines() if "browser" in text.lower()]
             url = answer[0].split(" ")[-1]
             os.system(f"xdg-open '{url}'")
-
-
-def debug_print(text):
-    if DEBUG:
-        print(text)

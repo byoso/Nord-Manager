@@ -23,6 +23,7 @@ from toolbox import (
     BASE_DIR,
     shortcut_connection,
     debug_print,
+    get_countries,
 )
 from helpers import (
     IconMenuItem,
@@ -115,8 +116,10 @@ class IndicatorApp():
         Gtk.main_quit()
 
     def connect_browse(self, source):
-        window = Browser()
-        window.show_all()
+        countries = get_countries()
+        if countries:
+            window = Browser(countries=countries)
+            window.show_all()
 
     def connect_item1(self, source):
         commande = data["it1c"]
@@ -368,6 +371,16 @@ class Settings(Gtk.Window):
         addvanced_frame_b.pack_start(timing_l, False, False, 0)
         addvanced_frame_b.pack_start(self.timing, False, False, 5)
 
+        # TIME OUT
+        timeout_l = Gtk.Label(label='Time out (abort if too long):')
+        self.timeout = Gtk.SpinButton()
+        self.timeout.set_numeric(True)
+        self.timeout.set_range(1, 30)
+        self.timeout.set_increments(1, -1)
+        self.timeout.set_value(data["timeout"])
+        addvanced_frame_b.pack_start(timeout_l, False, False, 0)
+        addvanced_frame_b.pack_start(self.timeout, False, False, 5)
+
         # green_word
         green_word_l = Gtk.Label(label='Green word (triggers the green status):')
         self.green_word = Gtk.Entry()
@@ -447,6 +460,7 @@ class Settings(Gtk.Window):
                 data["it6c"] = self.it6ce.get_text()
                 data["emergency"] = self.emergency_entry.get_text()
                 data["timing"] = self.timing.get_value()
+                data["timeout"] = self.timeout.get_value()
                 data["green_word"] = self.green_word.get_text()
                 data["info_command"] = self.info_command.get_text()
                 data["not_logged_in"] = "not logged in"

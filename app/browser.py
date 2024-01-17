@@ -18,7 +18,7 @@ from config import (
 
 
 class Browser(Gtk.Window):
-    def __init__(self):
+    def __init__(self, countries: list):
         super().__init__(title="Nord Manager browser")
         # icon
         icon_file = os.path.abspath(
@@ -45,9 +45,6 @@ class Browser(Gtk.Window):
         self.viewport = Gtk.Viewport()
         self.scroll.add(self.viewport)
 
-        # get countries
-        countries = get_countries()
-
         # boxes
         self.box = Gtk.VBox()
         self.viewport.add(self.box)
@@ -55,7 +52,6 @@ class Browser(Gtk.Window):
         for country in countries:
             button = Gtk.Button(country['name'])
             debug_print(country['name'])
-            # cities = reg(os.popen("nordvpn cities {}".format(country)))
             cities = country['cities']
             debug_print(cities)
             store = Gtk.ListStore(str)
