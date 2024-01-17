@@ -390,7 +390,7 @@ class Settings(Gtk.Window):
 
         # info_command
         info_command_l = Gtk.Label(
-            label='Info command (returns the VPN conection infos):')
+            label='Info command (returns the VPN connection infos):')
         self.info_command = Gtk.Entry()
         self.info_command.set_text(data["info_command"])
         addvanced_frame_b.pack_start(info_command_l, False, False, 0)
