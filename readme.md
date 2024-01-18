@@ -6,7 +6,7 @@ _Non official NordVPN GUI for linux_
 
 
 Very light weight application, simple and fast GUI.
-A security option the closes the transmission app if the vpn is
+A security option closes the transmission app if the vpn is
 disconnected.
 
  :coffee: [**You can buy me a coffee if you're in the mood ;)**](https://www.buymeacoffee.com/byoso)
@@ -14,7 +14,7 @@ disconnected.
 ## INSTALLATION (on any linux distro)
 
 Now Nord Manager uses ayatana appindicator for better compatibility. It is supposed to be included in most of the recent major distros,
-but depending on the system you are you running, this dependencie may be missing. You can install it this way:
+but depending on the system you are running, this dependencie may be missing. You can install it this way:
 
 **Example for Ubuntu**:
 ```bash
@@ -25,7 +25,7 @@ Then:
 
 - be sure you have the official nordvpn installed first.
 
-- So you can install nord manager:
+- Now you can install nord manager:
 ```bash
 $ ./installer
 ```
@@ -64,6 +64,9 @@ the current VPN connection information.
 - **timing** : the length of the cycle between status checks, by default
 it is 3 (seconds).
 
+- **timeout** : nord-manager sends calls to nord vpn's servers, if for some reason the
+server can not respond, the action is aborted after the time (in seconds) set here.
+
 - **emmergency kill** :
 This is a bash command that prevent the use of some app if the VPN is
 not connected, typicaly :
@@ -79,6 +82,6 @@ deactivate it by commenting the line ("#" at the begining)
 
 
 ### Changelog:
-- 2.1.3 : Timeout for some actions, so the app wont get stuck anymore if a call do not receive a response fom nord vpn's servers.
+- 2.1.3 : Timeout for some actions, so the app wont get stuck anymore if a call does not receive a response fom nord vpn's servers.
 - 2.1.0 : use of nord vpn's api instead of "scrapping" the terminal to get the countries and cities (more reliable)
 - 2.0.2 : Autodetect if not logged in, then redirect to the connection web page.
