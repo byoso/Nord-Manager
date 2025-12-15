@@ -91,7 +91,7 @@ import subprocess
 # geninstaller version check
 ############################
 
-geninstaller_min_required_version = "2.0.3"
+geninstaller_min_required_version = "2.0.8"
 
 def version_from_string(v: str) -> tuple:
     return tuple(map(int, (v.split("."))))
@@ -117,7 +117,7 @@ install_geninstaller_message = f"""
 Geninstaller >= {geninstaller_min_required_version} must be installed with pipx before running this installer:
 
 # INSTALLING pipx:
-Ubuntu / Debian		        sudo apt install pipx ou pip install --user pipx
+Ubuntu / Debian		        sudo apt install pipx or pip install --user pipx
 Fedora / RHEL / CentOS		sudo dnf install pipx
 Arch / Manjaro		        sudo pacman -S pipx
 openSUSE		            sudo zypper install pipx
@@ -125,9 +125,15 @@ openSUSE		            sudo zypper install pipx
 # INSTALLING geninstaller with pipx:
 $ pipx install geninstaller
 """
-if not "geninstaller" in installed_tools or not required_version(installed_tools["geninstaller"], geninstaller_min_required_version, "3.0.0"):
-    print(install_geninstaller_message)
-    exit(0)
+# this check only works with python 3.12 and above due to pipx issues with older versions
+import sys
+MIN_PYTHON = (3, 12)
+if sys.version_info >= MIN_PYTHON:
+    if not "geninstaller" in installed_tools or not required_version(installed_tools["geninstaller"], geninstaller_min_required_version, "3.0.0"):
+        print(install_geninstaller_message)
+        exit(0)
+else:
+    print(f"WARNING: Your version of python is {sys.version_info.major}.{sys.version_info.minor}, to ancient to run some pipx verifications, install continues anyway...")
 
 
 # Installation with geninstaller
@@ -142,8 +148,8 @@ def install() -> None:
     """installs the application with geninstaller"""
     # building the query parameters
     query_params = f'?name="{NAME}"+exec="{EXECUTABLE}"+description="{DESCRIPTION}"+' \
-        f'terminal="{TERMINAL}"+icon="{ICON}"+categories="{';'.join(CATEGORIES)}"+' \
-        f'base_dir="{BASE_DIR}"+exec_options="{exec_options}"+options="{';'.join(options)}"+' \
+        f'terminal="{TERMINAL}"+icon="{ICON}"+categories="{";".join(CATEGORIES)}"+' \
+        f'base_dir="{BASE_DIR}"+exec_options="{exec_options}"+options="{";".join(options)}"+' \
         f'pre_install_file="{pre_install}"+post_install_file="{post_install}"+' \
         f'pre_uninstall_file="{pre_uninstall}"+post_uninstall_file="{post_uninstall}"+' \
         f'python_dependencies="{";".join(python_dependencies)}"'
