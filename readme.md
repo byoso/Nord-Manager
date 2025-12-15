@@ -13,6 +13,31 @@ disconnected.
 
 ## INSTALLATION (on any linux distro)
 
+### 'installer' file
+
+Nord Manager uses geninstaller to install it easily, geninstaller must be installed first with pipx:
+so if you do not have pipx installed:
+```sh
+# for debian/ubuntu/mint etc...
+sudo apt install pipx
+# Fedora / RHEL / CentOS
+sudo dnf install pipx
+# Arch / Manjaro
+sudo pacman -S pipx
+# openSUSE
+sudo zypper install pipx
+```
+and for geninstaller:
+```sh
+pipx install geninstaller
+# be sure geninstaller is in version 2.0.8 at least which is not compatible with version 1.0.0
+```
+only now you can run the installer from the root directory: `./installer`
+
+know more about geninstaller [here](https://github.com/byoso/geninstaller)
+
+### About GTK (if you matter)
+
 Now Nord Manager uses ayatana appindicator for better compatibility. It is supposed to be included in most of the recent major distros,
 but depending on the system you are running, this dependencie may be missing. You can install it this way:
 
