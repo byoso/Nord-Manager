@@ -91,7 +91,8 @@ import subprocess
 # geninstaller version check
 ############################
 
-geninstaller_min_required_version = "2.0.8"
+# geninstaller_min_required_version = "1.0.0"  # dev
+geninstaller_min_required_version = "2.0.8"  # prod
 
 def version_from_string(v: str) -> tuple:
     return tuple(map(int, (v.split("."))))
@@ -104,33 +105,43 @@ def required_version(v1: str, min: str, max: str) -> bool:
     max_version = version_from_string(max)
     return current_version >= min_version and current_version < max_version
 
-installed_pipx = subprocess.run(
-    ["pipx", "list", "--short"],
-    capture_output=True,
-    text=True,
-    check=False
-)
-installed_list = installed_pipx.stdout.strip().splitlines()
-installed_tools = {i: j for i, j in (item.split() for item in installed_list)}
 install_geninstaller_message = f"""
 !! ABORTED !!
 Geninstaller >= {geninstaller_min_required_version} must be installed with pipx before running this installer:
-
+"""
+install_geninstaller_message_pipx = f"""
 # INSTALLING pipx:
-Ubuntu / Debian		        sudo apt install pipx or pip install --user pipx
-Fedora / RHEL / CentOS		sudo dnf install pipx
-Arch / Manjaro		        sudo pacman -S pipx
-openSUSE		            sudo zypper install pipx
-
+Ubuntu / Debian             sudo apt install pipx ou pip install --user pipx
+Fedora / RHEL / CentOS      sudo dnf install pipx
+Arch / Manjaro              sudo pacman -S pipx
+openSUSE                    sudo zypper install pipx
+"""
+install_geninstaller_messge_geninstaller = f"""
 # INSTALLING geninstaller with pipx:
 $ pipx install geninstaller
 """
+
+try:
+    installed_pipx = subprocess.run(
+        ["pipx", "list", "--short"],
+        capture_output=True,
+        text=True,
+        check=False
+    )
+except FileNotFoundError:
+    message = install_geninstaller_message + install_geninstaller_message_pipx + install_geninstaller_messge_geninstaller
+    print(message)
+    exit(0)
+installed_list = installed_pipx.stdout.strip().splitlines()
+installed_tools = {i: j for i, j in (item.split() for item in installed_list)}
+
 # this check only works with python 3.12 and above due to pipx issues with older versions
 import sys
 MIN_PYTHON = (3, 12)
 if sys.version_info >= MIN_PYTHON:
     if not "geninstaller" in installed_tools or not required_version(installed_tools["geninstaller"], geninstaller_min_required_version, "3.0.0"):
-        print(install_geninstaller_message)
+        message = install_geninstaller_message + install_geninstaller_messge_geninstaller
+        print(message)
         exit(0)
 else:
     print(f"WARNING: Your version of python is {sys.version_info.major}.{sys.version_info.minor}, to ancient to run some pipx verifications, install continues anyway...")
